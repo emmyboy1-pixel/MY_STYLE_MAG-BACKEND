@@ -27,7 +27,7 @@ app.use("/api/v1", authRouter);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
-app.use("/api/outfits", outfitRoutes);
+app.use("/api/v1/outfits", outfitRoutes);
 
 // syncing databse and running port number
 sequelize

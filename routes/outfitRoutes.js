@@ -1,30 +1,23 @@
-import express  from "express";
-import { createOutfit } from "../controllers/outfitController.js";
+import express from "express";
+import {
+  createOutfit,
+  deleteOutfit,
+  getAllOutfits,
+  getSingleOutfit,
+  updateOutfit,
+} from "../controllers/outfitController.js";
+import { authenticateUser } from "../middleware/authentication.js";
 
 const router = express.Router();
 
-router.post('/outfits', createOutfit
-    // create an outfit
-);
+router.post("/", authenticateUser, createOutfit);
 
+router.get("/", getAllOutfits);
 
-router.get('/', (req, res) => {
-    // get all outfit
-});
+router.get("/:id", getSingleOutfit);
 
+router.put("/:id", authenticateUser, updateOutfit);
 
-router.get('/', (req, res) => {
-    // get an outfit
-});
-
-router.put('/', (req, res) => {
-    // update an outfit
-});
-
-
-router.delete('/', (req, res) => {
-    // delete an outfit
-});
-
+router.delete("/:id", authenticateUser, deleteOutfit);
 
 export default router;

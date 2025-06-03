@@ -104,8 +104,6 @@ export const updateCategory = async (req, res) => {
     { where: { id: categoryId } }
   );
 
-  console.log(updateCategory);
-
   if (!updateCategory) {
     return res.status(500).json({
       status: false,
@@ -132,11 +130,9 @@ export const deleteCategory = async (req, res) => {
       .json({ status: false, message: "Category not found", data: [] });
   }
 
-  res
-    .status(200)
-    .json({
-      status: true,
-      message: "Category deleted successfully.",
-      data: [],
-    });
+  res.status(200).json({
+    status: true,
+    message: "Category deleted successfully.",
+    data: [],
+  });
 };
