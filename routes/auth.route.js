@@ -1,10 +1,20 @@
 import express from "express";
-import { register, login, logOut } from "../controllers/auth.controller.js";
+import {
+  register,
+  login,
+  logOut,
+  forgotPassword,
+  verifyResetToken,
+  changePassword,
+} from "../controllers/auth.controller.js";
 
 const authRouter = express.Router();
 
 authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.get("/logout", logOut);
+authRouter.post("/forgotPassword", forgotPassword);
+authRouter.get("/verifyResetToken", verifyResetToken);
+authRouter.post("/changePassword", changePassword);
 
 export default authRouter;
