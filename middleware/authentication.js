@@ -5,7 +5,7 @@ const authenticateUser = async (req, res, next) => {
 
   if (!token) {
     res
-      .status(400)
+      .status(401)
       .json({ status: false, message: "Authentication Failed", data: [] });
   }
 

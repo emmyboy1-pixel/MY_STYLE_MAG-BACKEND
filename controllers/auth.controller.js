@@ -63,8 +63,14 @@ const login = async (req, res) => {
   });
 };
 
-const logout = () => {};
+const logOut = (req, res) => {
+  res.clearCookie("accessToken");
+
+  res
+    .status(200)
+    .json({ status: true, message: "User Logged Out Successfully", data: [] });
+};
 
 // TODO: forgotPassword, verifyResetToken, and changePassword.
 
-export { register, login };
+export { register, login, logOut };
