@@ -24,7 +24,7 @@ app.get("/api/v1/auth", authenticateUser, (req, res) => {
 
 // routes here
 app.use("/api/v1", authRouter);
-app.use("/api/categories", categoryRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/outfits", outfitRoutes);
