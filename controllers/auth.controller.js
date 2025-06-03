@@ -1,5 +1,6 @@
 import User from "../models/userModels.js";
 import bcrypt from "bcrypt";
+import { attachCookiesToResponse } from "../utils/auth/jwt.js";
 
 const register = async (req, res) => {
   const { name, email, password, role } = req.body;
@@ -18,7 +19,7 @@ const register = async (req, res) => {
     name,
     email,
     password: hashed_password,
-    role,
+    role: "user" || role,
   });
 
   if (!user) {
@@ -53,7 +54,7 @@ const login = async (req, res) => {
 
   // Remove password from user data
   const { password: savedPassword, ...tokenUser } = existingUser.dataValues;
-  // TODO: JWT based authentication.
+  attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(200).json({
     status: true,
