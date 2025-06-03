@@ -63,7 +63,7 @@ const login = async (req, res) => {
   });
 };
 
-const logOut = (req, res) => {
+const logOut = async (req, res) => {
   res.clearCookie("accessToken");
 
   res
@@ -71,6 +71,6 @@ const logOut = (req, res) => {
     .json({ status: true, message: "User Logged Out Successfully", data: [] });
 };
 
-// TODO: forgotPassword, verifyResetToken, and changePassword.
+// TODO:  sendVerificationEmail, verifyEmail, forgotPassword, verifyResetToken, and changePassword.
 
 export { register, login, logOut };
