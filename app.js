@@ -1,6 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import express from "express";
 import dotenv from "dotenv";
+=======
+import express from 'express';
+import dotenv from 'dotenv';
+import cloudinary from './config/cloudinary.js';
+import upload from './middleware/multer.js';
+>>>>>>> a148a43 (config to multer change)
 import { sequelize } from "./config/dbConfig.js";
 import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";

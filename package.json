@@ -13,7 +13,18 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "cookie-parser": "^1.4.7",
+<<<<<<< HEAD
+=======
+    "cloudinary": "^2.6.1",
+=======
+>>>>>>> 38c0285 (Revert "merged changes from remote main branchMerge branch 'main' of https://github.com/emmyboy1-pixel/MY_STYLE_MAG-BACKEND")
+=======
+    "cloudinary": "^2.6.1",
+    "cookie-parser": "^1.4.7",
+>>>>>>> 7bf8976 (config to multer change)
+>>>>>>> a148a43 (config to multer change)
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
