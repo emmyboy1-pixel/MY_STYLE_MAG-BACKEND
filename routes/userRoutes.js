@@ -8,7 +8,7 @@ router.post('/signup', createUser, (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    // login user
+    res.send("User created successfully");
 })
 
 /*
