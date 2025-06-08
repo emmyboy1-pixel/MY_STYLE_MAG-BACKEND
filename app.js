@@ -1,7 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import cloudinary from "./config/cloudinary.js";
-import upload from "./middleware/multer.js";
 import { sequelize } from "./config/dbConfig.js";
 import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";
@@ -10,6 +8,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import { authenticateUser } from "./middleware/authentication.js";
+import uploadroute from "./routes/uploadroute.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -38,16 +37,7 @@ app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/outfits", outfitRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/v1/outfits", outfitRoutes);
-
-//uploads the image found in "uploads folder into cloudinary"
-app.post("/api/upload", upload.single("image"), (req, res) => {
-  cloudinary.uploader.upload(req.file.path, (error, result) => {
-    if (error) {
-      return res.status(500).json({ error: "Failed to upload image" });
-    }
-    res.status(200).json({ url: result.secure_url });
-  });
-});
+app.use("/api/upload", uploadroute);
 
 // syncing databse and running port number
 sequelize
