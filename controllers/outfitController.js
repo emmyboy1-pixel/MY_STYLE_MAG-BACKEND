@@ -2,6 +2,7 @@ import Outfit from "../models/outfitModel.js";
 import Category from "../models/categoryModel.js";
 import User from "../models/userModels.js";
 import Tag from "../models/tagModel.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const createOutfit = async (req, res) => {
   try {
@@ -51,20 +52,35 @@ export const createOutfit = async (req, res) => {
 //  get outfit
 
 export const getAllOutfits = async (req, res) => {
+ const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const nextCursor = req.query.next_cursor || null;
+
   try {
-    const outfits = await Outfit.findAndCountAll({
-      order: [["createdAt", "DESC"]],
-    });
+    let search = cloudinary.search
+      .expression('resource_type:image') 
+      .sort_by('created_at', 'desc')
+      .max_results(limit);
+
+    if (nextCursor) {
+      search = search.next_cursor(nextCursor);
+    }
+
+    const result = await search.execute();
+
+    const imageUrls = result.resources.map(img => img.secure_url);
 
     res.status(200).json({
       status: true,
-      message: "All outfits fetched successfully",
-      data: outfits,
+      message: "Images fetched successfully",
+      data: imageUrls,
+      next_cursor: result.next_cursor || null,
     });
   } catch (error) {
     res.status(500).json({
-      error: "Internal server error occured",
-      details: error.message,
+      status: false,
+      message: "Failed to fetch images from Cloudinary",
+      error: error.message,
     });
   }
 };
