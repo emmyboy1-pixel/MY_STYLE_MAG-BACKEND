@@ -93,7 +93,7 @@
         "tags": ["Authentication"],
         "summary": "Logout",
         "description": "Logs out the authenticated user by invalidating their current session or token.",
-        "operationId": "get3000apiv1logout",
+        "operationId": "getapiv1logout",
         "parameters": [],
         "responses": {
           "200": {
@@ -143,11 +143,11 @@
       }
     },
     "/api/v1/verifyResetToken": {
-      "post": {
+      "get": {
         "tags": ["Authentication"],
         "summary": "Verify Reset Token",
         "description": "Verifies the validity of the password reset token for a given email.",
-        "operationId": "postapiv1verifyResetToken",
+        "operationId": "getapiv1verifyResetToken",
         "parameters": [],
         "requestBody": {
           "required": true,
