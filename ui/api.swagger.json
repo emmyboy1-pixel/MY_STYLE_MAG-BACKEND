@@ -1,0 +1,241 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TechCrush API",
+    "version": "1.0.0",
+    "description": "Authentication endpoints for TechCrush API",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "https://my-style-mag-backend.onrender.com/"
+    }
+  ],
+  "paths": {
+    "api/v1/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register",
+        "description": "Creates a new user account by providing name, email, and password.",
+        "operationId": "postapiv1register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "format": "password" }
+                },
+                "example": {
+                  "name": "taylor",
+                  "email": "dabataylor2@gmail.com",
+                  "password": "password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration returns the newly created user details.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login",
+        "description": "Authenticates a user using email and password and returns an access token.",
+        "operationId": "postapiv1login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "format": "password" }
+                },
+                "example": {
+                  "email": "dabataylor2@gmail.com",
+                  "password": "12345"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login returns authentication token and user info.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/logout": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Logout",
+        "description": "Logs out the authenticated user by invalidating their current session or token.",
+        "operationId": "get3000apiv1logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful logout confirmation.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/forgotPassword": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Forgot Password",
+        "description": "Initiates password reset by sending a token to the user's email address.",
+        "operationId": "postapiv1forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" }
+                },
+                "example": {
+                  "email": "dabataylor2@gmail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful initiation of password reset process.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/verifyResetToken": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Verify Reset Token",
+        "description": "Verifies the validity of the password reset token for a given email.",
+        "operationId": "postapiv1verifyResetToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "resetToken": { "type": "string" }
+                },
+                "example": {
+                  "email": "dabataylor2@gmail.com",
+                  "resetToken": "349824"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmation of reset token validity.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/changePassword": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Change Password",
+        "description": "Resets the user's password using a valid reset token and a new password.",
+        "operationId": "postapiv1changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "resetToken": { "type": "string" },
+                  "newPassword": { "type": "string", "format": "password" }
+                },
+                "example": {
+                  "newPassword": "newPassword",
+                  "resetToken": "349824",
+                  "email": "dabataylor2@gmail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmation of successful password change.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/auth": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Test Auth",
+        "description": "Validates current user credentials to ensure the session or token is active.",
+        "operationId": "getapiv1auth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns confirmation if authentication is valid.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

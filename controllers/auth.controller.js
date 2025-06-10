@@ -171,7 +171,7 @@ const changePassword = async (req, res) => {
       .json({ status: false, message: "Invalid User or Token", data: [] });
   }
 
-  const hashedPassword = await bcrypt.hashSync(newPassword, 10);
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
   const passwordChanged = await User.update(
     { password: hashedPassword },
@@ -182,6 +182,19 @@ const changePassword = async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Could not save password",
+      data: [],
+    });
+  }
+
+  const deleteResetToken = await User.update(
+    { resetToken: null, resetTokenExpiry: null },
+    { where: { id: existingUser.id } }
+  );
+
+  if (!deleteResetToken) {
+    return res.status(500).json({
+      status: false,
+      message: "Failed to delete reset tokens",
       data: [],
     });
   }
