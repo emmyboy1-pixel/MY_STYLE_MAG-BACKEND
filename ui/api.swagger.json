@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "api/v1/register": {
+    "/api/v1/register": {
       "post": {
         "tags": ["Authentication"],
         "summary": "Register",
@@ -51,7 +51,7 @@
         }
       }
     },
-    "api/v1/login": {
+    "/api/v1/login": {
       "post": {
         "tags": ["Authentication"],
         "summary": "Login",
@@ -88,7 +88,7 @@
         }
       }
     },
-    "api/v1/logout": {
+    "/api/v1/logout": {
       "get": {
         "tags": ["Authentication"],
         "summary": "Logout",
@@ -107,7 +107,7 @@
         }
       }
     },
-    "api/v1/forgotPassword": {
+    "/api/v1/forgotPassword": {
       "post": {
         "tags": ["Authentication"],
         "summary": "Forgot Password",
@@ -142,7 +142,7 @@
         }
       }
     },
-    "api/v1/verifyResetToken": {
+    "/api/v1/verifyResetToken": {
       "post": {
         "tags": ["Authentication"],
         "summary": "Verify Reset Token",
@@ -179,7 +179,7 @@
         }
       }
     },
-    "api/v1/changePassword": {
+    "/api/v1/changePassword": {
       "post": {
         "tags": ["Authentication"],
         "summary": "Change Password",
@@ -218,7 +218,7 @@
         }
       }
     },
-    "api/v1/auth": {
+    "/api/v1/auth": {
       "get": {
         "tags": ["Authentication"],
         "summary": "Test Auth",
