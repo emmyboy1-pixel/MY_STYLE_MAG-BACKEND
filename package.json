@@ -12,46 +12,16 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "cookie-parser": "^1.4.7",
-<<<<<<< HEAD
-=======
-    "cloudinary": "^2.6.1",
-=======
->>>>>>> 38c0285 (Revert "merged changes from remote main branchMerge branch 'main' of https://github.com/emmyboy1-pixel/MY_STYLE_MAG-BACKEND")
-=======
     "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
->>>>>>> 7bf8976 (config to multer change)
->>>>>>> a148a43 (config to multer change)
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.14.1",
-    "nodemailer": "^7.0.3",
-=======
-    "cloudinary": "^2.6.1",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
     "multer": "^2.0.1",
     "mysql2": "^3.14.1",
-    "mystylemag": "file:",
-<<<<<<< HEAD
->>>>>>> a2821a6 (commit message)
-<<<<<<< HEAD
-=======
-=======
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "mysql2": "^3.14.1",
->>>>>>> 5e34f8b (Revert "merged changes from remote main branchMerge branch 'main' of https://github.com/emmyboy1-pixel/MY_STYLE_MAG-BACKEND")
-=======
     "nodemailer": "^7.0.3",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
->>>>>>> 7c20e5e (Add postgresql db package)
->>>>>>> a33fb97 (Add postgresql db package)
     "sequelize": "^6.37.7",
     "validator": "^13.15.15"
   }
