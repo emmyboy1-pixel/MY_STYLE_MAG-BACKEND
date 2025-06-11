@@ -52,22 +52,44 @@ export const createOutfit = async (req, res) => {
 
 export const getAllOutfits = async (req, res) => {
   try {
+    const { tag, category } = req.query;
+
+    const whereClause = {};
+    const includeClause = [];
+
+    // Filter by category if provided
+    if (category) {
+      whereClause.categoryId = category;
+    }
+
+    // Filter by tag if provided
+    if (tag) {
+      includeClause.push({
+        model: Tag,
+        where: { name: tag },
+        through: { attributes: [] }, // Hide join table attributes
+      });
+    }
+
     const outfits = await Outfit.findAndCountAll({
+      where: whereClause,
+      include: includeClause,
       order: [["createdAt", "DESC"]],
     });
 
     res.status(200).json({
       status: true,
-      message: "All outfits fetched successfully",
+      message: "Outfits fetched successfully",
       data: outfits,
     });
   } catch (error) {
     res.status(500).json({
-      error: "Internal server error occured",
+      error: "Internal server error occurred",
       details: error.message,
     });
   }
 };
+
 
 export const getSingleOutfit = async (req, res) => {
   try {
