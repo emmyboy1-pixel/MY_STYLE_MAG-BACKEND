@@ -1,5 +1,8 @@
 import express  from "express";
+import { renamelookbook } from "../controllers/lookbookController.js";
+import { deleteLookbook } from "../controllers/lookbookController.js";
 import { createLookbook } from "../controllers/lookbookController.js";
+
 
 const router = express.Router();
 
@@ -17,14 +20,11 @@ router.get('/users/:userId/:lookbookId', (req, res) => {
     // get a sigle lookbook
 });
 
-router.put('/users/:userId/:lookbookId', (req, res) => {
-    // update a lookbook
-});
+// UPDATE lookbook (rename)
+router.put('/users/:userId/lookbooks/:lookbookId', renamelookbook);
 
-
-router.delete('/users/:userId/:lookbookId', (req, res) => {
-    // delete a lookbook
-});
+// DELETE lookbook
+router.delete('/users/:userId/lookbooks/:lookbookId', deleteLookbook);
 
 
 export default router;
