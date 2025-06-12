@@ -4,6 +4,7 @@ import { sequelize } from "../config/dbConfig.js";
 import User from "./userModels.js";
 import Lookbook from "./lookbookModels.js";
 import Outfit from "./outfitModel.js";
+import Tag from "./tagModel.js";
 import BlogPost from "./blogPostModel.js";
 import Admin from "./adminModel.js";
 import Category from "./categoryModel.js";
@@ -31,6 +32,9 @@ Outfit.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
 // Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: 'outfitId', as: 'tags'});
 
 // Outfit.belongsToMany(Category, )
+// Define many-to-many relationships
+Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: "outfitId" });
+Tag.belongsToMany(Outfit, { through: outfitTag, foreignKey: "tagId" });
 
 // BlogPost relationship here
 

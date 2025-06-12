@@ -1,12 +1,26 @@
-// ####  This is a joint table   ########
-
+// outfitTagModel.js
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/dbConfig.js"
+import { sequelize } from "../config/dbConfig.js";
 
-const outfitTag = sequelize.define('outfitTag', {
-    // still have to fill in here
-},
-{ timestamps: true}
-)
+const outfitTag = sequelize.define(
+  "outfitTag",
+  {
+    outfitId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Outfits",
+        key: "id",
+      },
+    },
+    tagId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Tags",
+        key: "id",
+      },
+    },
+  },
+  { timestamps: true }
+);
 
 export default outfitTag;
