@@ -2,6 +2,7 @@ import Outfit from "../models/outfitModel.js";
 import Category from "../models/categoryModel.js";
 import User from "../models/userModels.js";
 import Tag from "../models/tagModel.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const createOutfit = async (req, res) => {
   try {
@@ -51,6 +52,10 @@ export const createOutfit = async (req, res) => {
 //  get outfit
 
 export const getAllOutfits = async (req, res) => {
+ const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const nextCursor = req.query.next_cursor || null;
+
   try {
     const { tag, category } = req.query;
 
