@@ -18,7 +18,7 @@ const register = async (req, res) => {
     const existingEmail = await User.findOne({ where: { email: email } });
 
     if (existingEmail) {
-      res
+      return res
         .status(404)
         .json({ status: false, message: "Email already in use", data: [] });
     }
@@ -33,7 +33,7 @@ const register = async (req, res) => {
     });
 
     if (!user) {
-      res.status(500).json({
+      return res.status(500).json({
         status: false,
         message: "Registration error",
         data: [],
@@ -60,12 +60,16 @@ const login = async (req, res) => {
   const existingUser = await User.findOne({ where: { email: email } });
 
   if (!existingUser) {
-    res.status(401).json({ status: false, message: errorMessage, data: [] });
+    return res
+      .status(401)
+      .json({ status: false, message: errorMessage, data: [] });
   }
 
   const passwordMatch = await bcrypt.compare(password, existingUser.password);
   if (!passwordMatch) {
-    res.status(401).json({ staus: false, message: errorMessage, data: [] });
+    return res
+      .status(401)
+      .json({ status: false, message: errorMessage, data: [] });
   }
 
   // Remove password from user data
