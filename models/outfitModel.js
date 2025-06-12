@@ -7,7 +7,21 @@ const Outfit = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
-    imageUrl: { type: DataTypes.STRING, allowNull: false },
+    imageUrls: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      get() {
+        const rawValue = this.getDataValue("imageUrls");
+        try {
+          return rawValue ? JSON.parse(rawValue) : [];
+        } catch (err) {
+          return [];
+        }
+      },
+      set(value) {
+        this.setDataValue("imageUrls", JSON.stringify(value || []));
+      },
+    },
     // slug: { type: DataTypes.STRING, },  // still to come back to this line
     categoryId: {
       type: DataTypes.INTEGER,
