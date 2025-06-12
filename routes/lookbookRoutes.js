@@ -28,3 +28,5 @@ router.delete('/users/:userId/lookbooks/:lookbookId', deleteLookbook);
 
 
 export default router;
+
+router.get('/users/:userId/lookbooks', getAllLookBooks);
