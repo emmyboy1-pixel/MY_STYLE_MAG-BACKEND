@@ -10,6 +10,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import { authenticateUser } from "./middleware/authentication.js";
+import adminRouter from './routes/adminRoutes.js';
 
 
 dotenv.config();
@@ -35,6 +36,8 @@ app.use("/api/lookbooks", lookbookRoutes );
 app.use("/api/outfits", outfitRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/v1/outfits", outfitRoutes);
+
+app.use("/api/admin", adminRouter);
 
 //uploads the image found in "uploads folder into cloudinary"
 app.post('/api/upload', upload.single('image'), (req, res) => {

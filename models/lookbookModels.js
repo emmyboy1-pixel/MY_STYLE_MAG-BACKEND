@@ -8,7 +8,10 @@ const Lookbook = sequelize.define('Lookbook', {
     
 },
 
- { timestamps: true}
+{
+    tableName: 'lookbooks',
+    timestamps: true
+}
 )
 
 export default Lookbook;

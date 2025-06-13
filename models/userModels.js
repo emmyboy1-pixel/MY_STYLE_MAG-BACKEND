@@ -12,7 +12,10 @@ const User = sequelize.define(
     resetTokenExpiry: { type: DataTypes.DATE, allowNull: true },
     role: { type: DataTypes.ENUM("user", "admin"), dafaultValue: "user" },
   },
-  { timestamps: true }
+  {
+    tableName: 'users',
+    timestamps: true
+  }
 );
 
 export default User;

@@ -13,7 +13,7 @@ const Outfit = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Categories",
+        model: "categories",
         key: "id",
       },
     },
@@ -26,7 +26,21 @@ const Outfit = sequelize.define(
       },
     },
   },
-  { timestamps: true }
+
+  { 
+    tableName: 'outfits',
+    timestamps: true 
+  }
 );
+
+Outfit.associate = function(models){
+  Outfit.belongsTo(models.User, { foreignKey: 'userId'});
+  Outfit.belongsTo(models.Category, { foreignKey: 'categoryId'});
+  Outfit.belongsTo(models.Admin, { foreignKey: "createdBy" });
+  Outfit.belongsToMany(models.Tag, {
+    through: 'OutfitTags',
+    foreignKey: 'outfitId'
+  });
+};
 
 export default Outfit;

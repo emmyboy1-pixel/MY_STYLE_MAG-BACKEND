@@ -7,7 +7,10 @@ const Tag = sequelize.define('Tag', {
     // slug: { type: DataTypes.STRING, },  // still to come back to this line
     
 },
-{ timestamps: true}
+{ 
+    tableName: "tags",
+    timestamps: true
+}
 )
 
 export default Tag;
