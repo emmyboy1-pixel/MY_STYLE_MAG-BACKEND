@@ -47,7 +47,7 @@ export const createLookbook = async(req, res) => {
 }
 
 // get all lookbooks
-export const getAllLookbooks = async(req, res) => {
+export const getAllLookBooks = async(req, res) => {
 }
 
 //rename a lookbook
@@ -161,6 +161,41 @@ export const deleteLookbook = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting lookbook", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+};
+
+// get all lookbooks
+export const getAllLookbooks = async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    // Check if user exists
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+        data: [],
+      });
+    }
+
+    // Get all lookbooks belonging to the user
+    const lookbooks = await Lookbook.findAll({
+      where: { userId }
+    });
+
+    res.status(200).json({
+      status: true,
+      message: "Lookbooks retrieved successfully",
+      data: lookbooks,
+    });
+
+  } catch (error) {
+    console.error("Error fetching lookbooks", error);
     res.status(500).json({
       error: "Internal server error",
       details: error.message,
