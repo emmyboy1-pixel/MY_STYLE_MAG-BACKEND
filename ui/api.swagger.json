@@ -143,11 +143,11 @@
       }
     },
     "/api/v1/verifyResetToken": {
-      "get": {
+      "post": {
         "tags": ["Authentication"],
         "summary": "Verify Reset Token",
         "description": "Verifies the validity of the password reset token for a given email.",
-        "operationId": "getapiv1verifyResetToken",
+        "operationId": "postapiv1verifyResetToken",
         "parameters": [],
         "requestBody": {
           "required": true,
