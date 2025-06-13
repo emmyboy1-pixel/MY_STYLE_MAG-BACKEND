@@ -3,6 +3,7 @@ import Category from "../models/categoryModel.js";
 import User from "../models/userModels.js";
 import Tag from "../models/tagModel.js";
 import cloudinary from "../config/cloudinary.js";
+import paginate from "../utils/pagination.js";
 
 export const createOutfit = async (req, res) => {
   try {
@@ -52,7 +53,7 @@ export const createOutfit = async (req, res) => {
 //  get outfit
 
 export const getAllOutfits = async (req, res) => {
- const page = parseInt(req.query.page) || 1;
+  const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const nextCursor = req.query.next_cursor || null;
 
@@ -79,6 +80,8 @@ export const getAllOutfits = async (req, res) => {
     const outfits = await Outfit.findAndCountAll({
       where: whereClause,
       include: includeClause,
+      offset: paginate(page - 1) * pageSize,
+      limit: limit,
       order: [["createdAt", "DESC"]],
     });
 
@@ -94,7 +97,6 @@ export const getAllOutfits = async (req, res) => {
     });
   }
 };
-
 
 export const getSingleOutfit = async (req, res) => {
   try {
