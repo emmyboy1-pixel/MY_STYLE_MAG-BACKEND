@@ -37,6 +37,7 @@ Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: "outfitId" });
 Tag.belongsToMany(Outfit, { through: outfitTag, foreignKey: "tagId" });
 
 // BlogPost relationship here
+BlogPost.belongsTo(User, { foreignKey: "createdBy" });
 
 // categories relationship here
 Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });

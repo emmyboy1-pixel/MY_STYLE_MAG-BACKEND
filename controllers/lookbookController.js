@@ -3,52 +3,48 @@ import User from "../models/userModels.js";
 import { Op } from "sequelize";
 
 // create a lookbook
-export const createLookbook = async(req, res) => {
-    
-    try {
+export const createLookbook = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const userId = Number(req.params.userId);
 
-        const { name } = req.body;
-        const userId = Number(req.params.userId);
-
-        // checking if user exist here
-        const user = await User.findByPk(userId);
-        if(!user){
-            return res.status(404).json({
-                status: false,
-                message: "User not found ",
-                data: []
-            });
-        }
-
-        // creating lookbook
-        const newLookbook = await Lookbook.create({ userId, name});
-
-        if(!newLookbook){
-            res.status(400).json({
-                status: false,
-                message: "Could not create the new Lookbook",
-                data: [],
-            })
-        }
-
-        res.status(201).json({
-            message: "Lookbook created successfully",
-            Lookbook: newLookbook
-        });
-
-        
-    } catch (error) {
-        console.error('Error creating lookbook', error);
-        res.status(500).json({
-            error: 'Internal server error',
-            details: error.message
-        });
+    // checking if user exist here
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found ",
+        data: [],
+      });
     }
-}
+
+    // creating lookbook
+    const newLookbook = await Lookbook.create({ userId, name });
+
+    if (!newLookbook) {
+      res.status(400).json({
+        status: false,
+        message: "Could not create the new Lookbook",
+        data: [],
+      });
+    }
+
+    res.status(201).json({
+      message: "Lookbook created successfully",
+      Lookbook: newLookbook,
+    });
+  } catch (error) {
+    console.error("Error creating lookbook", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+};
 
 // get all lookbooks
-export const getAllLookBooks = async(req, res) => {
-}
+// export const getAllLookBooks = async(req, res) => {
+// }
 
 //rename a lookbook
 export const renamelookbook = async (req, res) => {
@@ -91,8 +87,8 @@ export const renamelookbook = async (req, res) => {
       where: {
         userId,
         name,
-        id: { [Op.ne]: lookbookId }  // Ensure it's not the same lookbook we're updating
-      }
+        id: { [Op.ne]: lookbookId }, // Ensure it's not the same lookbook we're updating
+      },
     });
 
     if (existingLookbook) {
@@ -111,7 +107,6 @@ export const renamelookbook = async (req, res) => {
       message: "Lookbook renamed successfully",
       lookbook: updatedLookbook,
     });
-
   } catch (error) {
     console.error("Error renaming lookbook", error);
     res.status(500).json({
@@ -185,7 +180,7 @@ export const getAllLookbooks = async (req, res) => {
 
     // Get all lookbooks belonging to the user
     const lookbooks = await Lookbook.findAll({
-      where: { userId }
+      where: { userId },
     });
 
     res.status(200).json({
@@ -193,7 +188,6 @@ export const getAllLookbooks = async (req, res) => {
       message: "Lookbooks retrieved successfully",
       data: lookbooks,
     });
-
   } catch (error) {
     console.error("Error fetching lookbooks", error);
     res.status(500).json({

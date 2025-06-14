@@ -17,10 +17,10 @@ const BlogPost = sequelize.define(
       },
     },
     createdBy: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "User",
+        model: "Users",
         key: "id",
       },
     },

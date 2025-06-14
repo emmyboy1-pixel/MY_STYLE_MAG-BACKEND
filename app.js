@@ -76,7 +76,7 @@ app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/outfits", outfitRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/v1/outfits", outfitRoutes);
-app.use("/api/upload", uploadroute);
+app.use("/api/v1/", uploadroute);
 
 // syncing databse and running port number
 sequelize
