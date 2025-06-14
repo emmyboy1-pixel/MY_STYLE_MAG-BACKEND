@@ -12,6 +12,7 @@ import outfitRoutes from "./routes/outfitRoutes.js";
 import lookbookRoutes from "./routes/lookbookRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import authRouter from "./routes/auth.route.js";
+import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
 import uploadroute from "./routes/uploadroute.js";
 
@@ -69,6 +70,7 @@ app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // routes here
 app.use("/api/v1", authRouter);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/outfits", outfitRoutes);
