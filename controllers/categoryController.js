@@ -1,4 +1,5 @@
 import Category from "../models/categoryModel.js";
+import asyncWrapper from "../middleware/async.js";
 
 export const createCategory = asyncWrapper(async (req, res, next) => {
   const { name, type } = req.body;

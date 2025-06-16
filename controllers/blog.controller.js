@@ -1,6 +1,7 @@
 import BlogPost from "../models/blogPostModel.js";
 import Category from "../models/categoryModel.js";
 import User from "../models/userModels.js";
+import asyncWrapper from "../middleware/async.js";
 
 const createBlogPost = asyncWrapper(async (req, res, next) => {
   const { title, content, imageURL, categoryId, createdBy } = req.body;

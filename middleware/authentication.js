@@ -1,7 +1,7 @@
-import { verifyAccessToken } from "../utils/auth/jwt.js";
+import { verifyToken } from "../utils/auth/jwt.js";
 
 const authenticateUser = async (req, res, next) => {
-  const token = req.signedCookies.accessToken;
+  const token = req.signedCookies.authToken;
 
   if (!token) {
     res
@@ -10,7 +10,7 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const payLoad = verifyAccessToken({ token });
+    const payLoad = verifyToken({ token });
     req.user = {
       id: payLoad.id,
       name: payLoad.name,

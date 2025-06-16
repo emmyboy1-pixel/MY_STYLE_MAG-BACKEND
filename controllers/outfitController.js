@@ -4,6 +4,7 @@ import User from "../models/userModels.js";
 import Tag from "../models/tagModel.js";
 import cloudinary from "../config/cloudinary.js";
 import paginate from "../utils/pagination.js";
+import asyncWrapper from "../middleware/async.js";
 
 export const createOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, imageUrl, categoryId } = req.body;

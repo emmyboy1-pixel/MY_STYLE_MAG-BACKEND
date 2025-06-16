@@ -7,3 +7,5 @@ const asyncWrapper = (callback) => {
     }
   };
 };
+
+export default asyncWrapper;

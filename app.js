@@ -12,11 +12,11 @@ import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";
 import lookbookRoutes from "./routes/lookbookRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-import authRouter from "./routes/auth.route.js";
+import authRouter from "./routes/auth.routes.js";
 import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
 import uploadroute from "./routes/uploadroute.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +34,7 @@ const allowedOrigins = [
   "http://l27.0.0.1:5000",
   "http://localhost:5500",
   "http://127.0.0.1:5500",
+  "https://captone-project-two.vercel.app",
 ];
 
 function checkCrossOrigin(origin, callback) {

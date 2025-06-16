@@ -1,6 +1,7 @@
 import Lookbook from "../models/lookbookModels.js";
 import User from "../models/userModels.js";
 import { Op } from "sequelize";
+import asyncWrapper from "../middleware/async.js";
 
 // create a lookbook
 export const createLookbook = asyncWrapper(async (req, res, next) => {

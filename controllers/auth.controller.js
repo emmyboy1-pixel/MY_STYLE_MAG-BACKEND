@@ -1,9 +1,14 @@
 import User from "../models/userModels.js";
 import bcrypt from "bcrypt";
-import { attachCookiesToResponse } from "../utils/auth/jwt.js";
+import { attachAuthCookiesToResponse } from "../utils/auth/jwt.js";
 import generateEmail from "../services/email/email.template.js";
 import sendEmail from "../services/email/email.service.js";
 import { Op } from "sequelize";
+import {
+  BadRequestErrorResponse,
+  NotFoundErrorResponse,
+} from "../utils/error/index.js";
+import asyncWrapper from "../middleware/async.js";
 
 const generateToken = () => {
   const min = 100000;
@@ -17,57 +22,49 @@ const register = asyncWrapper(async (req, res, next) => {
   const existingEmail = await User.findOne({ where: { email: email } });
 
   if (existingEmail) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Email already in use", data: [] });
+    throw new BadRequestErrorResponse("Email Already in use");
   }
 
   const hashed_password = bcrypt.hashSync(password, 10);
 
-  const user = await User.create({
+  await User.create({
     name,
     email,
     password: hashed_password,
-    role: "user" || role,
+    role: role || "user",
   });
-
-  if (!user) {
-    return res.status(500).json({
-      status: false,
-      message: "Registration error",
-      data: [],
-    });
-  }
 
   res.status(201).json({
     status: true,
     message: "User created successfully",
-    data: [],
   });
 });
 
 const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;
-  const errorMessage = "Wrong username or password";
+  const errorMessage = "Invalid username or password";
 
   const existingUser = await User.findOne({ where: { email: email } });
 
   if (!existingUser) {
-    return res
-      .status(401)
-      .json({ status: false, message: errorMessage, data: [] });
+    throw new NotFoundErrorResponse(errorMessage);
   }
 
   const passwordMatch = await bcrypt.compare(password, existingUser.password);
   if (!passwordMatch) {
-    return res
-      .status(401)
-      .json({ status: false, message: errorMessage, data: [] });
+    throw new NotFoundErrorResponse(errorMessage);
   }
 
-  // Remove password from user data
-  const { password: savedPassword, ...tokenUser } = existingUser.dataValues;
-  attachCookiesToResponse({ res, user: tokenUser });
+  const userData = existingUser.dataValues;
+  const tokenUser = {
+    id: userData.id,
+    name: userData.name,
+    email: userData.email,
+    role: userData.role,
+    createdAt: userData.createdAt,
+    updatedAt: userData.updatedAt,
+  };
+  attachAuthCookiesToResponse({ res, user: tokenUser });
 
   res.status(200).json({
     status: true,
@@ -77,11 +74,11 @@ const login = asyncWrapper(async (req, res, next) => {
 });
 
 const logOut = asyncWrapper(async (req, res, next) => {
-  res.clearCookie("accessToken");
+  res.clearCookie("authToken");
 
   res
     .status(200)
-    .json({ status: true, message: "User Logged Out Successfully", data: [] });
+    .json({ status: true, message: "User Logged Out Successfully" });
 });
 
 // TODO:  sendVerificationEmail, verifyEmail.
