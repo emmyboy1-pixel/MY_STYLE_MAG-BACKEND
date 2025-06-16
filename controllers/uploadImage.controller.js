@@ -1,8 +1,9 @@
 import fs from "fs/promises";
 import Outfit from "../models/outfitModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import asyncWrapper from "../middleware/async.js";
 
-export const uploadImagesToCloudinary = async (req, res) => {
+export const uploadImagesToCloudinary = asyncWrapper(async (req, res) => {
   try {
     const { id: outfitId } = req.params;
 
@@ -53,4 +54,4 @@ export const uploadImagesToCloudinary = async (req, res) => {
       error: error.message,
     });
   }
-};
+});

@@ -11,49 +11,42 @@ const generateToken = () => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const register = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+const register = asyncWrapper(async (req, res, next) => {
+  const { name, email, password, role } = req.body;
 
-    const existingEmail = await User.findOne({ where: { email: email } });
+  const existingEmail = await User.findOne({ where: { email: email } });
 
-    if (existingEmail) {
-      return res
-        .status(404)
-        .json({ status: false, message: "Email already in use", data: [] });
-    }
+  if (existingEmail) {
+    return res
+      .status(404)
+      .json({ status: false, message: "Email already in use", data: [] });
+  }
 
-    const hashed_password = bcrypt.hashSync(password, 10);
+  const hashed_password = bcrypt.hashSync(password, 10);
 
-    const user = await User.create({
-      name,
-      email,
-      password: hashed_password,
-      role: "user" || role,
-    });
+  const user = await User.create({
+    name,
+    email,
+    password: hashed_password,
+    role: "user" || role,
+  });
 
-    if (!user) {
-      return res.status(500).json({
-        status: false,
-        message: "Registration error",
-        data: [],
-      });
-    }
-
-    res.status(201).json({
-      status: true,
-      message: "User created successfully",
+  if (!user) {
+    return res.status(500).json({
+      status: false,
+      message: "Registration error",
       data: [],
     });
-  } catch (error) {
-    res.status(500).json({
-      error: "User Registration unsuccessfully",
-      details: error.message,
-    });
   }
-};
 
-const login = async (req, res) => {
+  res.status(201).json({
+    status: true,
+    message: "User created successfully",
+    data: [],
+  });
+});
+
+const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;
   const errorMessage = "Wrong username or password";
 
@@ -81,18 +74,18 @@ const login = async (req, res) => {
     message: "User Login Successfully",
     data: tokenUser,
   });
-};
+});
 
-const logOut = async (req, res) => {
+const logOut = asyncWrapper(async (req, res, next) => {
   res.clearCookie("accessToken");
 
   res
     .status(200)
     .json({ status: true, message: "User Logged Out Successfully", data: [] });
-};
+});
 
 // TODO:  sendVerificationEmail, verifyEmail.
-const forgotPassword = async (req, res) => {
+const forgotPassword = asyncWrapper(async (req, res, next) => {
   const { email } = req.body;
 
   const existingUser = await User.findOne({
@@ -139,9 +132,9 @@ const forgotPassword = async (req, res) => {
     message: `Email sent Successfully to ${email}`,
     data: [],
   });
-};
+});
 
-const verifyResetToken = async (req, res) => {
+const verifyResetToken = asyncWrapper(async (req, res, next) => {
   const { email, resetToken } = req.body;
 
   const existingUser = await User.findOne({
@@ -162,9 +155,9 @@ const verifyResetToken = async (req, res) => {
   res
     .status(200)
     .json({ status: true, message: "Token verified successfully", data: null });
-};
+});
 
-const changePassword = async (req, res) => {
+const changePassword = asyncWrapper(async (req, res, next) => {
   const { newPassword, resetToken, email } = req.body;
 
   const existingUser = await User.findOne({
@@ -213,7 +206,7 @@ const changePassword = async (req, res) => {
   res
     .status(200)
     .json({ status: true, message: "Password updated successfully", data: [] });
-};
+});
 
 export {
   register,

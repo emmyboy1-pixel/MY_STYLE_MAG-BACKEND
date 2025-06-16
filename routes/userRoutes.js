@@ -1,15 +1,7 @@
-import express  from "express";
+import express from "express";
 import { createUser } from "../controllers/userControler.js";
 
 const router = express.Router();
-
-router.post('/signup', createUser, (req, res) => {
-    // create a user
-});
-
-router.post('/', (req, res) => {
-    res.send("User created successfully");
-})
 
 /*
 router.get('/', (req, res) => {

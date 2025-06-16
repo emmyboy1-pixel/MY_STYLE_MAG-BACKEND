@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { sequelize } from "./config/dbConfig.js";
+
 import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";
 import lookbookRoutes from "./routes/lookbookRoutes.js";
@@ -15,6 +16,7 @@ import authRouter from "./routes/auth.route.js";
 import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
 import uploadroute from "./routes/uploadroute.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -77,6 +79,7 @@ app.use("/api/outfits", outfitRoutes);
 app.use("/api/lookbooks", lookbookRoutes);
 app.use("/api/v1/outfits", outfitRoutes);
 app.use("/api/v1/", uploadroute);
+app.use(errorHandler);
 
 // syncing databse and running port number
 sequelize
