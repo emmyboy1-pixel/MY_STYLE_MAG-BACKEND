@@ -1,12 +1,11 @@
 import { verifyToken } from "../utils/auth/jwt.js";
+import { UnAuthenticatedErrorResponse } from "../utils/error/index.js";
 
 const authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.authToken;
 
   if (!token) {
-    res
-      .status(401)
-      .json({ status: false, message: "Authentication Failed", data: [] });
+    throw new UnAuthenticatedErrorResponse("User Authentication Failed");
   }
 
   try {

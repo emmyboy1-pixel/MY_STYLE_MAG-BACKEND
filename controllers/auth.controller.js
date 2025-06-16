@@ -89,45 +89,26 @@ const forgotPassword = asyncWrapper(async (req, res, next) => {
     where: { email: email },
   });
 
-  if (!existingUser) {
-    return res
-      .status(400)
-      .json({ status: false, message: "User not Found", data: [] });
-  }
+  if (existingUser) {
+    const resetToken = generateToken().toString();
+    const fifTeenMinutes = 1000 * 60 * 15;
+    const resetTokenExpiry = new Date(Date.now() + fifTeenMinutes);
 
-  const resetToken = generateToken().toString();
-  const fifTeenMinutes = 1000 * 60 * 15;
-  const resetTokenExpiry = new Date(Date.now() + fifTeenMinutes);
+    const emailHtml = generateEmail(resetToken);
 
-  const emailHtml = generateEmail(resetToken);
+    const emailSent = await sendEmail(email, emailHtml);
 
-  const emailSent = await sendEmail(email, emailHtml);
-
-  if (!emailSent) {
-    return res.status(501).json({
-      status: false,
-      message: "Email not sent, an error occurred",
-      data: [],
-    });
-  }
-
-  const storeResetToken = await User.update(
-    { resetToken, resetTokenExpiry },
-    { where: { email: email } }
-  );
-
-  if (!storeResetToken) {
-    return res.status(500).json({
-      status: false,
-      message: "Could not store reset token",
-      data: [],
-    });
+    if (emailSent) {
+      await User.update(
+        { resetToken, resetTokenExpiry },
+        { where: { email: email } }
+      );
+    }
   }
 
   res.status(200).json({
-    status: "success",
-    message: `Email sent Successfully to ${email}`,
-    data: [],
+    status: true,
+    message: `Email sent Successfully to ${email}, if account with email exists`,
   });
 });
 
@@ -140,13 +121,11 @@ const verifyResetToken = asyncWrapper(async (req, res, next) => {
       resetToken,
       resetTokenExpiry: { [Op.gte]: new Date() },
     },
-    attributes: { email: true },
+    attributes: ["email"],
   });
 
   if (!existingUser) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Invalid User or Token", data: [] });
+    throw new NotFoundErrorResponse("Token verification failed");
   }
 
   res
@@ -169,36 +148,20 @@ const changePassword = asyncWrapper(async (req, res, next) => {
   if (!existingUser) {
     return res
       .status(404)
-      .json({ status: false, message: "Invalid User or Token", data: [] });
+      .json({ status: false, message: "Token verification failed" });
   }
 
   const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
-  const passwordChanged = await User.update(
+  await User.update(
     { password: hashedPassword },
     { where: { id: existingUser.id } }
   );
 
-  if (!passwordChanged) {
-    return res.status(500).json({
-      status: false,
-      message: "Could not save password",
-      data: [],
-    });
-  }
-
-  const deleteResetToken = await User.update(
+  await User.update(
     { resetToken: null, resetTokenExpiry: null },
     { where: { id: existingUser.id } }
   );
-
-  if (!deleteResetToken) {
-    return res.status(500).json({
-      status: false,
-      message: "Failed to delete reset tokens",
-      data: [],
-    });
-  }
 
   res
     .status(200)
