@@ -6,7 +6,7 @@ const Category = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
-    type: { type: DataTypes.ENUM("outfit", "blog"), dafaultValue: "outfit" },
+    type: { type: DataTypes.STRING, dafaultValue: "outfit" },
     // slug: { type: DataTypes.STRING, },  // still to come back to this line
   },
   { timestamps: true }

@@ -11,7 +11,7 @@ import { sequelize } from "./config/dbConfig.js";
 import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";
 import lookbookRoutes from "./routes/lookbookRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
+import categoryRouter from "./routes/category.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
@@ -70,9 +70,10 @@ app.get("/api/v1/auth", authenticateUser, (req, res) => {
 // API documentation
 app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// TODO: Add Validators for every data.
 // routes here
 app.use("/api/v1", authRouter);
-app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/lookbooks", lookbookRoutes);

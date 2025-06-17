@@ -10,15 +10,14 @@ import { authenticateUser } from "../middleware/authentication.js";
 
 const blogPostRouter = express.Router();
 
-blogPostRouter
-  .route("/")
-  .get(authenticateUser, getAllBlogPosts)
-  .post(authenticateUser, createBlogPost);
+blogPostRouter.use(authenticateUser);
+
+blogPostRouter.route("/").get(getAllBlogPosts).post(createBlogPost);
 
 blogPostRouter
   .route("/:id")
-  .get(authenticateUser, getSingleBlogPost)
-  .patch(authenticateUser, updateBlogPost)
-  .delete(authenticateUser, deleteBlogPost);
+  .get(getSingleBlogPost)
+  .patch(updateBlogPost)
+  .delete(deleteBlogPost);
 
 export default blogPostRouter;
