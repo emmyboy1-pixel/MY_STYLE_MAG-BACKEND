@@ -1,6 +1,5 @@
 import BlogPost from "../models/blogPostModel.js";
 import Category from "../models/categoryModel.js";
-import User from "../models/userModels.js";
 import asyncWrapper from "../middleware/async.js";
 import paginate from "../utils/pagination.js";
 import { NotFoundErrorResponse } from "../utils/error/index.js";
