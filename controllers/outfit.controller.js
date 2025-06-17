@@ -1,40 +1,30 @@
 import Outfit from "../models/outfitModel.js";
 import Category from "../models/categoryModel.js";
-import User from "../models/userModels.js";
 import Tag from "../models/tagModel.js";
-import cloudinary from "../config/cloudinary.js";
 import paginate from "../utils/pagination.js";
 import asyncWrapper from "../middleware/async.js";
+import {
+  ConflictErrorResponse,
+  NotFoundErrorResponse,
+} from "../utils/error/index.js";
 
 export const createOutfit = asyncWrapper(async (req, res, next) => {
-  const { title, description, imageUrl, categoryId } = req.body;
+  const { title, description, categoryId } = req.body;
   const createdBy = req.user.id;
 
   // validating if category exists
   const category = await Category.findByPk(categoryId);
-
   if (!category) {
-    return res.status(404).json({
-      error: "Category not found",
-    });
+    throw new NotFoundErrorResponse("Category not found");
   }
 
   // creating the outfit
   const outfit = await Outfit.create({
     title,
     description,
-    imageUrl,
     categoryId,
     createdBy,
   });
-
-  if (!outfit) {
-    res.status(400).json({
-      status: false,
-      message: "Could not create the outfit",
-      data: [],
-    });
-  }
 
   res.status(201).json({
     status: true,
@@ -45,8 +35,7 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
 
 export const getAllOutfits = asyncWrapper(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 10;
-  const nextCursor = req.query.next_cursor || null;
+  const limit = parseInt(req.query.limit) || 30;
   const { tag, category } = req.query;
 
   const whereClause = {};
@@ -69,7 +58,7 @@ export const getAllOutfits = asyncWrapper(async (req, res, next) => {
   const outfits = await Outfit.findAndCountAll({
     where: whereClause,
     include: includeClause,
-    offset: paginate(page - 1) * pageSize,
+    offset: paginate(limit, page),
     limit: limit,
     order: [["createdAt", "DESC"]],
   });
@@ -77,7 +66,8 @@ export const getAllOutfits = asyncWrapper(async (req, res, next) => {
   res.status(200).json({
     status: true,
     message: "Outfits fetched successfully",
-    data: outfits,
+    total: outfits.count,
+    data: outfits.rows.map((outfit) => outfit.toJSON()),
   });
 });
 
@@ -86,9 +76,7 @@ export const getSingleOutfit = asyncWrapper(async (req, res, next) => {
   const existingOutfit = await Outfit.findByPk(outfitId);
 
   if (!existingOutfit) {
-    res
-      .status(404)
-      .json({ status: false, message: "Outfit not found", data: [] });
+    throw new NotFoundErrorResponse("Outfit not found");
   }
 
   res.status(200).json({
@@ -100,41 +88,46 @@ export const getSingleOutfit = asyncWrapper(async (req, res, next) => {
 
 export const updateOutfit = asyncWrapper(async (req, res, next) => {
   const { id: outfitId } = req.params;
-  const { title, description, imageUrl, categoryId } = req.body;
-  const createdBy = req.user.id;
+  const { title, description, categoryId } = req.body;
+  const updatedBy = req.user.id;
 
   const existingOutfit = await Outfit.findByPk(outfitId);
-
   if (!existingOutfit) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Outfit not found", data: [] });
+    throw new NotFoundErrorResponse("Outfit not found");
   }
 
   const category = await Category.findByPk(categoryId);
-
   if (!category) {
-    return res.status(404).json({
-      error: "Category not found",
-    });
+    throw new NotFoundErrorResponse("Category not found");
   }
 
-  const updateOutfit = await Outfit.update(
-    { title, description, imageUrl, categoryId, createdBy },
+  if (title !== existingOutfit.title) {
+    const existingOutfitWithSameTitle = await Outfit.findOne({
+      where: { title },
+    });
+    if (existingOutfitWithSameTitle) {
+      throw new ConflictErrorResponse(
+        "You already have another outfit with this name"
+      );
+    }
+  }
+
+  const [affectedRows] = await Outfit.update(
+    { title, description, categoryId, updatedBy },
     { where: { id: outfitId } }
   );
 
-  if (!updateOutfit) {
-    return res.status(500).json({
-      status: false,
-      message: "Could not update outfit details",
-      data: [],
-    });
+  if (affectedRows === 0) {
+    throw new NotFoundErrorResponse("Blog post not found or not updated");
   }
 
-  res
-    .status(200)
-    .json({ status: true, message: "Outfit Updated Successfully" });
+  const updatedOutfit = await Outfit.findByPk(outfitId);
+
+  res.status(200).json({
+    status: true,
+    message: "Outfit Updated Successfully",
+    data: updatedOutfit,
+  });
 });
 
 export const deleteOutfit = asyncWrapper(async (req, res, next) => {
@@ -145,14 +138,11 @@ export const deleteOutfit = asyncWrapper(async (req, res, next) => {
   });
 
   if (deletedCount === 0) {
-    res
-      .status(404)
-      .json({ status: false, message: "Outfit not found", data: [] });
+    throw new NotFoundErrorResponse("Outfit not found");
   }
 
   res.status(200).json({
     status: true,
     message: "Outfit deleted successfully.",
-    data: [],
   });
 });

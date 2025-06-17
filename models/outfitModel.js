@@ -39,6 +39,14 @@ const Outfit = sequelize.define(
         key: "id",
       },
     },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
   },
   { timestamps: true }
 );

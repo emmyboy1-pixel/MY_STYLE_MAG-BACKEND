@@ -14,11 +14,6 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not Found");
   }
 
-  const existingUser = await User.findByPk(createdBy);
-  if (!existingUser) {
-    throw new NotFoundErrorResponse("User not found");
-  }
-
   const newBlogPost = await BlogPost.create({
     title,
     content,
