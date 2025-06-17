@@ -2,58 +2,62 @@ import BlogPost from "../models/blogPostModel.js";
 import Category from "../models/categoryModel.js";
 import User from "../models/userModels.js";
 import asyncWrapper from "../middleware/async.js";
+import paginate from "../utils/pagination.js";
+import { NotFoundErrorResponse } from "../utils/error/index.js";
 
 const createBlogPost = asyncWrapper(async (req, res, next) => {
-  const { title, content, imageURL, categoryId, createdBy } = req.body;
+  const createdBy = req.user.id;
+  const { title, content, imageUrl, categoryId } = req.body;
 
   const existingCategory = await Category.findByPk(categoryId);
   if (!existingCategory) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Category not found" });
+    throw new NotFoundErrorResponse("Category not Found");
   }
 
   const existingUser = await User.findByPk(createdBy);
   if (!existingUser) {
-    return res.status(404).json({ status: false, message: "User not found" });
+    throw new NotFoundErrorResponse("User not found");
   }
 
   const newBlogPost = await BlogPost.create({
     title,
     content,
-    imageURL,
+    imageUrl,
     categoryId,
     createdBy,
   });
 
-  if (!newBlogPost) {
-    return res
-      .status(500)
-      .json({ status: false, message: "Blog post creation failed" });
-  }
-
-  return res
-    .status(201)
-    .json({ status: true, message: "Blog post created successfully" });
+  return res.status(201).json({
+    status: true,
+    message: "Blog post created successfully",
+    data: newBlogPost,
+  });
 });
 
 const getAllBlogPosts = asyncWrapper(async (req, res, next) => {
-  const blogPosts = await BlogPost.findAll({});
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 30;
+  const blogPosts = await BlogPost.findAndCountAll({
+    offset: paginate(limit, page),
+    limit: limit,
+    order: [["updatedAt", "DESC"]],
+  });
 
   return res.status(200).json({
     status: true,
     message: "Blogs fetched successfully",
-    data: blogPosts,
+    total: blogPosts.count,
+    data: blogPosts.rows.map((post) => post.toJSON()),
   });
 });
 
 const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
-  const blogId = Number(req.params.id);
+  const { id: blogId } = req.params;
 
   const existingBlogPost = await BlogPost.findByPk(blogId);
 
   if (!existingBlogPost) {
-    return res.status(404).json({ status: false, message: "Blog not found" });
+    throw new NotFoundErrorResponse("Blog not found");
   }
 
   return res.status(200).json({
@@ -64,55 +68,48 @@ const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
 });
 
 const updateBlogPost = asyncWrapper(async (req, res, next) => {
-  const blogId = Number(req.params.id);
-  const { title, content, imageURL, categoryId, createdBy } = req.body;
+  const updatedBy = req.user.id;
+  const { id: blogId } = req.params;
+  const { title, content, imageUrl, categoryId } = req.body;
 
   const existingCategory = await Category.findByPk(categoryId);
   if (!existingCategory) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Category not found" });
+    throw new NotFoundErrorResponse("Category not found");
   }
 
-  const existingUser = await User.findByPk(createdBy);
-  if (!existingUser) {
-    return res.status(404).json({ status: false, message: "User not found" });
-  }
-
-  const newBlogPost = await BlogPost.create(
+  const [affectedRows] = await BlogPost.update(
     {
       title,
       content,
-      imageURL,
+      imageUrl,
       categoryId,
-      createdBy,
+      updatedBy,
     },
     { where: { id: blogId } }
   );
 
-  if (!newBlogPost) {
-    return res
-      .status(500)
-      .json({ status: false, message: "Blog post update failed." });
+  if (affectedRows === 0) {
+    throw new NotFoundErrorResponse("Blog post not found or not updated");
   }
 
-  return res
-    .status(201)
-    .json({ status: true, message: "Blog post updated successfully" });
+  const updatedBlogPost = await BlogPost.findByPk(blogId);
+
+  return res.status(200).json({
+    status: true,
+    message: "Blog post updated successfully",
+    data: updatedBlogPost,
+  });
 });
 
 const deleteBlogPost = asyncWrapper(async (req, res, next) => {
-  const blogId = Number(req.params.id);
+  const { id: blogId } = req.params;
 
   const deletedCount = await BlogPost.destroy({
     where: { id: blogId },
   });
 
   if (deletedCount === 0) {
-    return res.status(404).json({
-      status: false,
-      message: "Failed to delete blog or blog not found",
-    });
+    throw new Error("Blog not Found");
   }
 
   return res

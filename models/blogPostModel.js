@@ -5,7 +5,7 @@ const BlogPost = sequelize.define(
   "BlogPost",
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.INTEGER, allowNull: false },
+    title: { type: DataTypes.STRING, allowNull: false },
     content: { type: DataTypes.STRING, allowNull: false },
     imageUrl: { type: DataTypes.STRING, allowNull: false },
     categoryId: {
@@ -19,6 +19,14 @@ const BlogPost = sequelize.define(
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
       references: {
         model: "Users",
         key: "id",
