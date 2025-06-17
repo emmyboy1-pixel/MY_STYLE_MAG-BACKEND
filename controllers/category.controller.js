@@ -51,7 +51,7 @@ export const getSingleCategory = asyncWrapper(async (req, res, next) => {
   return res.status(200).json({
     status: true,
     message: "Category fetched Successfully",
-    data: existingCategory.dataValues,
+    data: existingCategory,
   });
 });
 
