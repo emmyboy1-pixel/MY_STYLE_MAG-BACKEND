@@ -9,6 +9,7 @@ import {
   NotFoundErrorResponse,
 } from "../utils/error/index.js";
 import asyncWrapper from "../middleware/async.js";
+import { sequelize } from "../config/dbConfig.js";
 
 const generateToken = () => {
   const min = 100000;
@@ -142,7 +143,7 @@ const changePassword = asyncWrapper(async (req, res, next) => {
       resetToken,
       resetTokenExpiry: { [Op.gte]: new Date() },
     },
-    attributes: { id: true },
+    attributes: ["id"],
   });
 
   if (!existingUser) {
@@ -154,12 +155,7 @@ const changePassword = asyncWrapper(async (req, res, next) => {
   const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
   await User.update(
-    { password: hashedPassword },
-    { where: { id: existingUser.id } }
-  );
-
-  await User.update(
-    { resetToken: null, resetTokenExpiry: null },
+    { password: hashedPassword, resetToken: null, resetTokenExpiry: null },
     { where: { id: existingUser.id } }
   );
 
