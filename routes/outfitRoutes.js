@@ -5,7 +5,7 @@ import {
   getAllOutfits,
   getSingleOutfit,
   updateOutfit,
-} from "../controllers/outfitController.js";
+} from "../controllers/outfit.controller.js";
 import { authenticateUser } from "../middleware/authentication.js";
 
 const router = express.Router();

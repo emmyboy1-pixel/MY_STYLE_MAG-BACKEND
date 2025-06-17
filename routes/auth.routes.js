@@ -8,14 +8,41 @@ import {
   changePassword,
 } from "../controllers/auth.controller.js";
 import { authenticateUser } from "../middleware/authentication.js";
+import validateRequestHandler from "../middleware/validation.js";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+  validateRole,
+} from "../utils/validator/validators.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", register);
-authRouter.post("/login", login);
-authRouter.get("/logout", authenticateUser, logOut);
-authRouter.post("/forgotPassword", forgotPassword);
-authRouter.post("/verifyResetToken", verifyResetToken);
-authRouter.post("/changePassword", changePassword);
+authRouter.post(
+  "/register",
+  [validateName, validateEmail, validatePassword, validateRole],
+  validateRequestHandler,
+  register
+);
+authRouter.post("/login", [validateEmail], validateRequestHandler, login);
+authRouter.post("/logout", authenticateUser, logOut);
+authRouter.post(
+  "/forgotPassword",
+  [validateEmail],
+  validateRequestHandler,
+  forgotPassword
+);
+authRouter.post(
+  "/verifyResetToken",
+  [validateEmail],
+  validateRequestHandler,
+  verifyResetToken
+);
+authRouter.post(
+  "/changePassword",
+  [validatePassword, validateEmail],
+  validateRequestHandler,
+  changePassword
+);
 
 export default authRouter;

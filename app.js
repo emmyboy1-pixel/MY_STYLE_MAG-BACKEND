@@ -8,7 +8,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { sequelize } from "./config/dbConfig.js";
 
-import userRoutes from "./routes/userRoutes.js";
 import outfitRoutes from "./routes/outfitRoutes.js";
 import lookBookRouter from "./routes/lookbook.routes.js";
 import categoryRouter from "./routes/category.routes.js";
@@ -76,7 +75,6 @@ app.use("/api/v1", authRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/v1/lookbook", lookBookRouter);
-app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/outfits", outfitRoutes);
 app.use("/api/v1/", uploadroute);
 app.use(errorHandler);

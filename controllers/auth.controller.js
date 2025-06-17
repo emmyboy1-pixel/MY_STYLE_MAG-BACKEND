@@ -9,7 +9,6 @@ import {
   NotFoundErrorResponse,
 } from "../utils/error/index.js";
 import asyncWrapper from "../middleware/async.js";
-import { sequelize } from "../config/dbConfig.js";
 
 const generateToken = () => {
   const min = 100000;
@@ -135,7 +134,7 @@ const verifyResetToken = asyncWrapper(async (req, res, next) => {
 });
 
 const changePassword = asyncWrapper(async (req, res, next) => {
-  const { newPassword, resetToken, email } = req.body;
+  const { password, resetToken, email } = req.body;
 
   const existingUser = await User.findOne({
     where: {
@@ -147,21 +146,23 @@ const changePassword = asyncWrapper(async (req, res, next) => {
   });
 
   if (!existingUser) {
-    return res
-      .status(404)
-      .json({ status: false, message: "Token verification failed" });
+    throw new NotFoundErrorResponse("Token verification failed");
   }
 
-  const hashedPassword = bcrypt.hashSync(newPassword, 10);
+  const hashedPassword = bcrypt.hashSync(password, 10);
 
-  await User.update(
+  const [affectedRows] = await User.update(
     { password: hashedPassword, resetToken: null, resetTokenExpiry: null },
     { where: { id: existingUser.id } }
   );
 
+  if (affectedRows === 0) {
+    throw new NotFoundErrorResponse("User not found or password not updated");
+  }
+
   res
     .status(200)
-    .json({ status: true, message: "Password updated successfully", data: [] });
+    .json({ status: true, message: "Password updated successfully" });
 });
 
 export {
