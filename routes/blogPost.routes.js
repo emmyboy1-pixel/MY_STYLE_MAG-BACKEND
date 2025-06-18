@@ -40,6 +40,6 @@ blogPostRouter
     checkAuthorizedPermissions("admin"),
     updateBlogPost
   )
-  .delete(checkAuthorizedPermissions, deleteBlogPost);
+  .delete(checkAuthorizedPermissions("admin"), deleteBlogPost);
 
 export default blogPostRouter;
