@@ -1,4 +1,4 @@
-import BlogPost from "../models/blogPostModel.js";
+import { BlogPost } from "../models/index.js";
 import Category from "../models/categoryModel.js";
 import asyncWrapper from "../middleware/async.js";
 import paginate from "../utils/pagination.js";
@@ -6,7 +6,7 @@ import { NotFoundErrorResponse } from "../utils/error/index.js";
 
 const createBlogPost = asyncWrapper(async (req, res, next) => {
   const createdBy = req.user.id;
-  const { title, content, imageUrl, categoryId } = req.body;
+  const { title, content, status, categoryId } = req.body;
 
   const existingCategory = await Category.findByPk(categoryId);
   if (!existingCategory) {
@@ -16,7 +16,7 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
   const newBlogPost = await BlogPost.create({
     title,
     content,
-    imageUrl,
+    status,
     categoryId,
     createdBy,
   });
@@ -28,7 +28,25 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
   });
 });
 
-const getAllBlogPosts = asyncWrapper(async (req, res, next) => {
+const getAllBlogPostsForUser = asyncWrapper(async (req, res, next) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 30;
+  const blogPosts = await BlogPost.findAndCountAll({
+    offset: paginate(limit, page),
+    limit: limit,
+    where: { status: "Published" },
+    order: [["updatedAt", "DESC"]],
+  });
+
+  return res.status(200).json({
+    status: true,
+    message: "Blogs fetched successfully",
+    total: blogPosts.count,
+    data: blogPosts.rows.map((post) => post.toJSON()),
+  });
+});
+
+const getAllBlogPostsForAdmin = asyncWrapper(async (req, res, next) => {
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 30;
   const blogPosts = await BlogPost.findAndCountAll({
@@ -47,11 +65,17 @@ const getAllBlogPosts = asyncWrapper(async (req, res, next) => {
 
 const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
   const { id: blogId } = req.params;
+  const { role: userRole } = req.user;
 
-  const existingBlogPost = await BlogPost.findByPk(blogId);
+  let existingBlogPost = await BlogPost.findByPk(blogId);
 
   if (!existingBlogPost) {
     throw new NotFoundErrorResponse("Blog not found");
+  }
+
+  if (userRole === "user") {
+    await BlogPost.increment("views", { by: 1, where: { id: blogId } });
+    existingBlogPost = await BlogPost.findByPk(blogId);
   }
 
   return res.status(200).json({
@@ -64,7 +88,7 @@ const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
 const updateBlogPost = asyncWrapper(async (req, res, next) => {
   const updatedBy = req.user.id;
   const { id: blogId } = req.params;
-  const { title, content, imageUrl, categoryId } = req.body;
+  const { title, content, status, categoryId } = req.body;
 
   const existingCategory = await Category.findByPk(categoryId);
   if (!existingCategory) {
@@ -75,7 +99,7 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
     {
       title,
       content,
-      imageUrl,
+      status,
       categoryId,
       updatedBy,
     },
@@ -113,7 +137,8 @@ const deleteBlogPost = asyncWrapper(async (req, res, next) => {
 
 export {
   createBlogPost,
-  getAllBlogPosts,
+  getAllBlogPostsForUser,
+  getAllBlogPostsForAdmin,
   getSingleBlogPost,
   updateBlogPost,
   deleteBlogPost,

@@ -1,16 +1,46 @@
 //  ### WE are defining our different relationships in this file
 
-import { sequelize } from "../config/dbConfig.js";
+import BlogPost from "./blogPost.model.js";
+
 import User from "./userModels.js";
 import Lookbook from "./lookbookModels.js";
 import Outfit from "./outfitModel.js";
 import Tag from "./tagModel.js";
-import BlogPost from "./blogPostModel.js";
-import Admin from "./adminModel.js";
 import Category from "./categoryModel.js";
 import outfitTag from "./outfitTagModel.js";
 
-// User relationships here
+// Blog relationships
+BlogPost.belongsTo(User, {
+  foreignKey: "createdBy",
+  as: "publisher",
+});
+BlogPost.belongsTo(User, {
+  foreignKey: "updatedBy",
+  as: "updater",
+});
+BlogPost.belongsTo(Category, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+// User relationships
+User.hasMany(BlogPost, {
+  foreignKey: "createdBy",
+  as: "createdPosts",
+});
+User.hasMany(BlogPost, {
+  foreignKey: "updatedBy",
+  as: "updatedPOsts",
+  onDelete: "SET NULL",
+});
+
+//Category relationships
+Category.hasMany(BlogPost, {
+  foreignKey: "categoryId",
+  as: "blogPosts",
+  onDelete: "SET NULL",
+});
+
 User.hasMany(Lookbook, {
   foreignKey: "userId",
   onDelete: "CASCADE",
@@ -36,9 +66,6 @@ Outfit.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
 Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: "outfitId" });
 Tag.belongsToMany(Outfit, { through: outfitTag, foreignKey: "tagId" });
 
-// BlogPost relationship here
-BlogPost.belongsTo(User, { foreignKey: "createdBy" });
-
 // categories relationship here
 Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });
 
@@ -46,4 +73,4 @@ Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });
 
 //  Admin Relationships here
 
-export { sequelize, User, Lookbook, Outfit };
+export { User, Lookbook, Outfit, BlogPost };

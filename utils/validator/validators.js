@@ -37,3 +37,12 @@ export const validateRole = body("role")
 export const validateId = param("id")
   .notEmpty()
   .withMessage("Id is required for this route");
+
+export const validateBlogPost = [
+  body("title").notEmpty().withMessage("Title is required"),
+  body("content").notEmpty().withMessage("Content is required"),
+  body("status")
+    .isIn(["Draft", "Archived", "Pending", "Published"])
+    .withMessage("Invalid status"),
+  body("categoryId").notEmpty().withMessage("Category ID is required"),
+];

@@ -1,5 +1,8 @@
 import { verifyToken } from "../utils/auth/jwt.js";
-import { UnAuthenticatedErrorResponse } from "../utils/error/index.js";
+import {
+  UnAuthenticatedErrorResponse,
+  UnAuthorizedErrorResponse,
+} from "../utils/error/index.js";
 
 const authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.authToken;
@@ -24,4 +27,15 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-export { authenticateUser };
+const checkAuthorizedPermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new UnAuthorizedErrorResponse(
+        "Unauthorized to access this resource"
+      );
+    }
+    next();
+  };
+};
+
+export { authenticateUser, checkAuthorizedPermissions };

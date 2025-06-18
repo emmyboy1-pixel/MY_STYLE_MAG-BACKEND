@@ -82,7 +82,7 @@ export const getSingleOutfit = asyncWrapper(async (req, res, next) => {
   res.status(200).json({
     status: true,
     message: "Outfit fetched Successfully",
-    data: existingOutfit.dataValues,
+    data: existingOutfit,
   });
 });
 
