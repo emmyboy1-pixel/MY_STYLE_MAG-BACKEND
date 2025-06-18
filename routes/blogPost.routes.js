@@ -27,7 +27,9 @@ blogPostRouter
     checkAuthorizedPermissions("admin"),
     createBlogPost
   );
-blogPostRouter.route("/admin/:id").get(getAllBlogPostsForAdmin);
+blogPostRouter
+  .route("/admin/:id")
+  .get(checkAuthorizedPermissions("admin"), getAllBlogPostsForAdmin);
 
 blogPostRouter
   .route("/:id")
