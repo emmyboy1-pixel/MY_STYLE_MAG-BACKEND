@@ -3,11 +3,12 @@
 import BlogPost from "./blogPost.model.js";
 
 import User from "./userModels.js";
-import Lookbook from "./lookbookModels.js";
-import Outfit from "./outfitModel.js";
-import Tag from "./tagModel.js";
 import Category from "./categoryModel.js";
-import outfitTag from "./outfitTagModel.js";
+
+// import Lookbook from "./lookbookModels.js";
+// import Outfit from "./outfitModel.js";
+// import Tag from "./tagModel.js";
+// import outfitTag from "./outfitTagModel.js";
 
 // Blog relationships
 BlogPost.belongsTo(User, {
@@ -41,36 +42,37 @@ Category.hasMany(BlogPost, {
   onDelete: "SET NULL",
 });
 
-User.hasMany(Lookbook, {
-  foreignKey: "userId",
-  onDelete: "CASCADE",
-  as: "lookbooks",
-});
-User.hasMany(Outfit, { foreignKey: "userId", as: "outfits" });
+// User.hasMany(Lookbook, {
+//   foreignKey: "userId",
+//   onDelete: "CASCADE",
+//   as: "lookbooks",
+// });
 
-// Lookbook relationships here
-Lookbook.belongsTo(User, { foreignKey: "userId", as: "user" });
-Lookbook.hasMany(Outfit, {
-  foreignKey: "lookbookId",
-  as: "outfits",
-  onDelete: "CASCADE",
-});
+// User.hasMany(Outfit, { foreignKey: "userId", as: "outfits" });
 
-// Outfit relationships here
-Outfit.belongsTo(User, { foreignKey: "userId" });
-Outfit.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
-// Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: 'outfitId', as: 'tags'});
+// // Lookbook relationships here
+// Lookbook.belongsTo(User, { foreignKey: "userId", as: "user" });
+// Lookbook.hasMany(Outfit, {
+//   foreignKey: "lookbookId",
+//   as: "outfits",
+//   onDelete: "CASCADE",
+// });
 
-// Outfit.belongsToMany(Category, )
-// Define many-to-many relationships
-Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: "outfitId" });
-Tag.belongsToMany(Outfit, { through: outfitTag, foreignKey: "tagId" });
+// // Outfit relationships here
+// Outfit.belongsTo(User, { foreignKey: "userId" });
+// Outfit.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
+// // Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: 'outfitId', as: 'tags'});
 
-// categories relationship here
-Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });
+// // Outfit.belongsToMany(Category, )
+// // Define many-to-many relationships
+// Outfit.belongsToMany(Tag, { through: outfitTag, foreignKey: "outfitId" });
+// Tag.belongsToMany(Outfit, { through: outfitTag, foreignKey: "tagId" });
 
-// Tag relationships here
+// // categories relationship here
+// Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });
 
-//  Admin Relationships here
+// // Tag relationships here
 
-export { User, Lookbook, Outfit, BlogPost };
+// //  Admin Relationships here
+
+export { User, BlogPost };

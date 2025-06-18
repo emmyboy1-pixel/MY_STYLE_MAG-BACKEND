@@ -1,4 +1,4 @@
-// ####  This is a joint table   ########
+// // ####  This is a joint table   ########
 
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/dbConfig.js"
+// import { DataTypes } from "sequelize";
+// import { sequelize } from "../config/dbConfig.js"

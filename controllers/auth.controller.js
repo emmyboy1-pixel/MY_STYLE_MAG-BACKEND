@@ -1,4 +1,4 @@
-import User from "../models/userModels.js";
+import { User } from "../models/index.js";
 import bcrypt from "bcrypt";
 import { attachAuthCookiesToResponse } from "../utils/auth/jwt.js";
 import generateEmail from "../services/email/email.template.js";
