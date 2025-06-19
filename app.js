@@ -79,9 +79,10 @@ app.use("/api/v1/outfits", outfitRouter);
 app.use("/api/v1/", uploadroute);
 app.use(errorHandler);
 
-// syncing databse and running port number
+// syncing database and running port number
+
 sequelize
-  .sync({ alter: true })
+  .sync({ force: true })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);

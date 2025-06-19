@@ -19,18 +19,17 @@ const BlogPost = sequelize.define(
     },
     views: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
     categoryId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: true,
       references: { model: "Categories", key: "id" },
-      onDelete: "SET NULL",
     },
     createdBy: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: DataTypes.UUID,
+      allowNull: true,
       references: { model: "Users", key: "id" },
     },
     updatedBy: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: true,
       references: { model: "Users", key: "id" },
       onDelete: "SET NULL",

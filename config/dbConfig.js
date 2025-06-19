@@ -13,5 +13,3 @@ export const sequelize = new Sequelize(
     dialect: process.env.DB_DIALECT,
   }
 );
-
-sequelize.sync({ alter: true });

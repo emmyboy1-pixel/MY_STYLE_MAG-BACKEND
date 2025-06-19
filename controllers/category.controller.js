@@ -1,4 +1,4 @@
-import Category from "../models/categoryModel.js";
+import { Category } from "../models/index.js";
 import asyncWrapper from "../middleware/async.js";
 import {
   BadRequestErrorResponse,

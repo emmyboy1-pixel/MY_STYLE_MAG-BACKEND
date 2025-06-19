@@ -1,6 +1,4 @@
-import Outfit from "../models/outfitModel.js";
-import Category from "../models/categoryModel.js";
-import Tag from "../models/tagModel.js";
+import { Outfit, Category, Tag } from "../models/index.js";
 import paginate from "../utils/pagination.js";
 import asyncWrapper from "../middleware/async.js";
 import {

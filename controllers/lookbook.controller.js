@@ -1,4 +1,4 @@
-import Lookbook from "../models/lookbookModels.js";
+import { Lookbook } from "../models/index.js";
 import { Op } from "sequelize";
 import asyncWrapper from "../middleware/async.js";
 import {

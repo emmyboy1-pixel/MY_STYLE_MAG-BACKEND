@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import Outfit from "../models/outfitModel.js";
+import { Outfit } from "../models/index.js";
 import { v2 as cloudinary } from "cloudinary";
 import asyncWrapper from "../middleware/async.js";
 
