@@ -6,18 +6,24 @@ import {
   getSingleCategory,
   updateCategory,
 } from "../controllers/category.controller.js";
-import { authenticateUser } from "../middleware/authentication.js";
+import {
+  authenticateUser,
+  checkAuthorizedPermissions,
+} from "../middleware/authentication.js";
 
 const categoryRouter = express.Router();
 
 categoryRouter.use(authenticateUser);
 
-categoryRouter.route("/").get(getAllCategories).post(createCategory);
+categoryRouter
+  .route("/")
+  .get(getAllCategories)
+  .post(checkAuthorizedPermissions("admin"), createCategory);
 
 categoryRouter
   .route("/:id")
   .get(getSingleCategory)
-  .patch(updateCategory)
-  .delete(deleteCategory);
+  .patch(checkAuthorizedPermissions("admin"), updateCategory)
+  .delete(checkAuthorizedPermissions("admin"), deleteCategory);
 
 export default categoryRouter;

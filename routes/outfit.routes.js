@@ -6,18 +6,24 @@ import {
   getSingleOutfit,
   updateOutfit,
 } from "../controllers/outfit.controller.js";
-import { authenticateUser } from "../middleware/authentication.js";
+import {
+  authenticateUser,
+  checkAuthorizedPermissions,
+} from "../middleware/authentication.js";
 
 const outfitRouter = express.Router();
 
 outfitRouter.use(authenticateUser);
 
-outfitRouter.route("/").get(getAllOutfits).post(createOutfit);
+outfitRouter
+  .route("/")
+  .get(getAllOutfits)
+  .post(checkAuthorizedPermissions("admin"), createOutfit);
 
 outfitRouter
   .route("/:id")
   .get(getSingleOutfit)
-  .patch(updateOutfit)
-  .delete(deleteOutfit);
+  .patch(checkAuthorizedPermissions("admin"), updateOutfit)
+  .delete(checkAuthorizedPermissions("admin"), deleteOutfit);
 
 export default outfitRouter;
