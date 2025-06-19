@@ -1,4 +1,4 @@
-import { Category } from "../models/index.js";
+import { Category, User } from "../models/index.js";
 import asyncWrapper from "../middleware/async.js";
 import {
   BadRequestErrorResponse,
@@ -6,7 +6,8 @@ import {
 } from "../utils/error/index.js";
 
 export const createCategory = asyncWrapper(async (req, res, next) => {
-  const { name, type } = req.body;
+  const { name } = req.body;
+  const { id: createdBy } = req.user;
 
   const existingCategory = await Category.findOne({ where: { name: name } });
 
@@ -14,10 +15,10 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
     throw new BadRequestErrorResponse("Category already in use");
   }
 
-  const newCategory = await Category.create({
-    name,
-    type: type || "outfit",
-  });
+  const newCategory = await Category.create(
+    { name, createdBy },
+    { include: [{ model: User, attributes: ["name"], as: "creator" }] }
+  );
 
   return res.status(201).json({
     status: true,
@@ -29,6 +30,10 @@ export const createCategory = asyncWrapper(async (req, res, next) => {
 export const getAllCategories = asyncWrapper(async (req, res, next) => {
   const categories = await Category.findAndCountAll({
     order: [["updatedAt", "DESC"]],
+    include: [
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
   });
 
   return res.status(200).json({
@@ -42,7 +47,12 @@ export const getAllCategories = asyncWrapper(async (req, res, next) => {
 export const getSingleCategory = asyncWrapper(async (req, res, next) => {
   const { id: categoryId } = req.params;
 
-  const existingCategory = await Category.findByPk(categoryId);
+  const existingCategory = await Category.findByPk(categoryId, {
+    include: [
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   if (!existingCategory) {
     throw new NotFoundErrorResponse("Category not found");
@@ -57,7 +67,8 @@ export const getSingleCategory = asyncWrapper(async (req, res, next) => {
 
 export const updateCategory = asyncWrapper(async (req, res, next) => {
   const { id: categoryId } = req.params;
-  const { name, type } = req.body;
+  const { name } = req.body;
+  const { id: updatedBy } = req.user;
 
   const existingCategory = await Category.findByPk(categoryId);
 
@@ -73,7 +84,7 @@ export const updateCategory = asyncWrapper(async (req, res, next) => {
   }
 
   const [affectedRows] = await Category.update(
-    { name, type },
+    { name, updatedBy },
     { where: { id: categoryId } }
   );
 
@@ -81,7 +92,12 @@ export const updateCategory = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not found or not updated");
   }
 
-  const updatedCategory = await Category.findByPk(categoryId);
+  const updatedCategory = await Category.findByPk(categoryId, {
+    include: [
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   return res.status(200).json({
     status: true,

@@ -1,4 +1,4 @@
-import { BlogPost, Category } from "../models/index.js";
+import { BlogPost, Category, User } from "../models/index.js";
 import asyncWrapper from "../middleware/async.js";
 import paginate from "../utils/pagination.js";
 import { NotFoundErrorResponse } from "../utils/error/index.js";
@@ -12,13 +12,18 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not Found");
   }
 
-  const newBlogPost = await BlogPost.create({
-    title,
-    content,
-    status,
-    categoryId,
-    createdBy,
-  });
+  const newBlogPost = await BlogPost.create(
+    {
+      title,
+      content,
+      status,
+      categoryId,
+      createdBy,
+    },
+    {
+      include: [{ model: Category, attributes: ["name"], as: "category" }],
+    }
+  );
 
   return res.status(201).json({
     status: true,
@@ -35,6 +40,11 @@ const getAllBlogPostsForUser = asyncWrapper(async (req, res, next) => {
     limit: limit,
     where: { status: "Published" },
     order: [["updatedAt", "DESC"]],
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
   });
 
   return res.status(200).json({
@@ -52,6 +62,11 @@ const getAllBlogPostsForAdmin = asyncWrapper(async (req, res, next) => {
     offset: paginate(limit, page),
     limit: limit,
     order: [["updatedAt", "DESC"]],
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
   });
 
   return res.status(200).json({
@@ -66,7 +81,13 @@ const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
   const { id: blogId } = req.params;
   const { role: userRole } = req.user;
 
-  let existingBlogPost = await BlogPost.findByPk(blogId);
+  let existingBlogPost = await BlogPost.findByPk(blogId, {
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   if (!existingBlogPost) {
     throw new NotFoundErrorResponse("Blog not found");
@@ -74,7 +95,13 @@ const getSingleBlogPost = asyncWrapper(async (req, res, next) => {
 
   if (userRole === "user") {
     await BlogPost.increment("views", { by: 1, where: { id: blogId } });
-    existingBlogPost = await BlogPost.findByPk(blogId);
+    existingBlogPost = await BlogPost.findByPk(blogId, {
+      include: [
+        { model: Category, attributes: ["name"], as: "category" },
+        { model: User, attributes: ["name"], as: "creator" },
+        { model: User, attributes: ["name"], as: "updater" },
+      ],
+    });
   }
 
   return res.status(200).json({
@@ -102,14 +129,22 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
       categoryId,
       updatedBy,
     },
-    { where: { id: blogId } }
+    {
+      where: { id: blogId },
+    }
   );
 
   if (affectedRows === 0) {
     throw new NotFoundErrorResponse("Blog post not found or not updated");
   }
 
-  const updatedBlogPost = await BlogPost.findByPk(blogId);
+  const updatedBlogPost = await BlogPost.findByPk(blogId, {
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   return res.status(200).json({
     status: true,

@@ -1,4 +1,4 @@
-import { Outfit, Category, Tag } from "../models/index.js";
+import { Outfit, Category, Tag, User } from "../models/index.js";
 import paginate from "../utils/pagination.js";
 import asyncWrapper from "../middleware/async.js";
 import {
@@ -17,12 +17,20 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
   }
 
   // creating the outfit
-  const outfit = await Outfit.create({
-    title,
-    description,
-    categoryId,
-    createdBy,
-  });
+  const outfit = await Outfit.create(
+    {
+      title,
+      description,
+      categoryId,
+      createdBy,
+    },
+    {
+      include: [
+        { model: Category, attributes: ["name"], as: "category" },
+        { model: User, attributes: ["name"], as: "creator" },
+      ],
+    }
+  );
 
   res.status(201).json({
     status: true,
@@ -59,6 +67,11 @@ export const getAllOutfits = asyncWrapper(async (req, res, next) => {
     offset: paginate(limit, page),
     limit: limit,
     order: [["createdAt", "DESC"]],
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
   });
 
   res.status(200).json({
@@ -71,7 +84,13 @@ export const getAllOutfits = asyncWrapper(async (req, res, next) => {
 
 export const getSingleOutfit = asyncWrapper(async (req, res, next) => {
   const { id: outfitId } = req.params;
-  const existingOutfit = await Outfit.findByPk(outfitId);
+  const existingOutfit = await Outfit.findByPk(outfitId, {
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   if (!existingOutfit) {
     throw new NotFoundErrorResponse("Outfit not found");
@@ -116,10 +135,16 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
   );
 
   if (affectedRows === 0) {
-    throw new NotFoundErrorResponse("Blog post not found or not updated");
+    throw new NotFoundErrorResponse("Outfit not found or not updated");
   }
 
-  const updatedOutfit = await Outfit.findByPk(outfitId);
+  const updatedOutfit = await Outfit.findByPk(outfitId, {
+    include: [
+      { model: Category, attributes: ["name"], as: "category" },
+      { model: User, attributes: ["name"], as: "creator" },
+      { model: User, attributes: ["name"], as: "updater" },
+    ],
+  });
 
   res.status(200).json({
     status: true,

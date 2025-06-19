@@ -17,7 +17,7 @@ const generateToken = () => {
 };
 
 const register = asyncWrapper(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, phoneNo, role } = req.body;
 
   const existingEmail = await User.findOne({ where: { email: email } });
 
@@ -31,6 +31,7 @@ const register = asyncWrapper(async (req, res, next) => {
     name,
     email,
     password: hashed_password,
+    phoneNo,
     role: role || "user",
   });
 

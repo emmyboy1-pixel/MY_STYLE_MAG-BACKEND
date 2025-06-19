@@ -1,4 +1,4 @@
-import { Lookbook } from "../models/index.js";
+import { Lookbook, Outfit } from "../models/index.js";
 import { Op } from "sequelize";
 import asyncWrapper from "../middleware/async.js";
 import {
@@ -51,7 +51,21 @@ export const getSingleLookBook = asyncWrapper(async (req, res, next) => {
   const { id: lookBookId } = req.params;
 
   const existingLookBook = await Lookbook.findOne({
-    where: { [Op.and]: [{ id: lookBookId }, { userId }] },
+    where: {
+      [Op.and]: [{ id: lookBookId }, { userId }],
+      include: [
+        {
+          model: Outfit,
+          attributes: ["id", "title", "description", "imageUrls", "categoryId"],
+          as: "outfits",
+          include: {
+            model: Category,
+            attributes: ["id", "name"],
+            as: "category",
+          },
+        },
+      ],
+    },
   });
 
   if (!existingLookBook) {

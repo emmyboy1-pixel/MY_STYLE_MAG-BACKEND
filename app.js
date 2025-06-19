@@ -36,16 +36,14 @@ const allowedOrigins = [
   "https://captone-project-two.vercel.app",
 ];
 
-function checkCrossOrigin(origin, callback) {
-  if (!origin || allowedOrigins.includes(origin)) {
-    callback(null, true);
-  } else {
-    callback(new Error("Not allowed by CORS"));
-  }
-}
-
 const corsOptions = {
-  origin: checkCrossOrigin,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 };
 
