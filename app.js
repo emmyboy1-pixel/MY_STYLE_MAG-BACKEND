@@ -16,6 +16,7 @@ import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
 import uploadroute from "./routes/uploadroute.js";
 import errorHandler from "./middleware/errorHandler.js";
+import adminRoutes from "./routes/adminRoute.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -76,6 +77,7 @@ app.use("/api/v1/lookbook", lookBookRouter);
 app.use("/api/v1/outfits", outfitRouter);
 app.use("/api/v1/", uploadroute);
 app.use(errorHandler);
+app.use("/api/v1/admin", adminRoutes);
 
 // syncing database and running port number
 
