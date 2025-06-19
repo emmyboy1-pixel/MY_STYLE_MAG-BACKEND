@@ -82,7 +82,7 @@ app.use(errorHandler);
 // syncing database and running port number
 
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
