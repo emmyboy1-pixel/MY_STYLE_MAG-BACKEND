@@ -5,6 +5,9 @@ import {
   ConflictErrorResponse,
   NotFoundErrorResponse,
 } from "../utils/error/index.js";
+import { uploadImagesToCloudinary } from "./uploadImage.controller.js";
+import { updateCloudinaryImages } from "../utils/images/updateCloudinaryImages.js";
+import { deleteCloudinaryImages } from "../utils/images/deleteCloudinaryImages.js";
 
 export const createOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, categoryId } = req.body;
@@ -16,27 +19,54 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not found");
   }
 
-  // creating the outfit
-  const outfit = await Outfit.create(
-    {
-      title,
-      description,
-      categoryId,
-      createdBy,
-    },
-    {
-      include: [
-        { model: Category, attributes: ["name"], as: "category" },
-        { model: User, attributes: ["name"], as: "creator" },
-      ],
-    }
-  );
+  const tx = await sequelize.transaction();
 
-  res.status(201).json({
-    status: true,
-    message: "Outfit created successfully",
-    data: outfit,
-  });
+  try {
+    // creating the outfit
+    const newOutfit = await Outfit.create(
+      {
+        title,
+        description,
+        categoryId,
+        createdBy,
+      },
+      {
+        transaction: tx,
+        include: [
+          { model: Category, attributes: ["name"], as: "category" },
+          { model: User, attributes: ["name"], as: "creator" },
+        ],
+      }
+    );
+
+    const imageUrls = await uploadImagesToCloudinary(
+      req,
+      "outfits",
+      newOutfit.id
+    );
+
+    let updatedOutfit;
+    if (imageUrls.length !== 0) {
+      updatedOutfit = await newOutfit.update(
+        { imageUrl: imageUrls },
+        { transaction: tx }
+      );
+    }
+
+    await tx.commit();
+
+    res.status(201).json({
+      status: true,
+      message: "Outfit created successfully",
+      data: updatedOutfit,
+    });
+  } catch (error) {
+    if (req.files?.length) {
+      await Promise.all(req.files.map((file) => fs.unlink(file.path)));
+    }
+    await tx.rollback();
+    throw error;
+  }
 });
 
 export const getAllOutfits = asyncWrapper(async (req, res, next) => {
@@ -129,6 +159,15 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
     }
   }
 
+  let newImagesUrls;
+  if (req.files?.length) {
+    newImagesUrls = await updateCloudinaryImages(
+      req,
+      "outfit",
+      existingOutfit.id
+    );
+  }
+
   const [affectedRows] = await Outfit.update(
     { title, description, categoryId, updatedBy },
     { where: { id: outfitId } }
@@ -156,12 +195,24 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
 export const deleteOutfit = asyncWrapper(async (req, res, next) => {
   const { id: outfitId } = req.params;
 
-  const deletedCount = await Outfit.destroy({
-    where: { id: outfitId },
-  });
-
-  if (deletedCount === 0) {
+  const existingOutfit = await Outfit.findByPk(outfitId);
+  if (!existingOutfit) {
     throw new NotFoundErrorResponse("Outfit not found");
+  }
+
+  const deleteCloudImages = await deleteCloudinaryImages(
+    "outfit",
+    existingOutfit.id
+  );
+
+  if (deleteCloudImages) {
+    const deletedCount = await Outfit.destroy({
+      where: { id: outfitId },
+    });
+
+    if (deletedCount === 0) {
+      throw new NotFoundErrorResponse("Outfit not found");
+    }
   }
 
   res.status(200).json({

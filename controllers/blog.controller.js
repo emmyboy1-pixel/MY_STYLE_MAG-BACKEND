@@ -7,6 +7,7 @@ import { NotFoundErrorResponse } from "../utils/error/index.js";
 import { uploadImagesToCloudinary } from "../utils/images/uploadImagesToCloudinary.js";
 import { sequelize } from "../config/dbConfig.js";
 import { updateCloudinaryImages } from "../utils/images/updateCloudinaryImages.js";
+import { deleteCloudinaryImages } from "../utils/images/deleteCloudinaryImages.js";
 
 const createBlogPost = asyncWrapper(async (req, res, next) => {
   const createdBy = req.user.id;
@@ -157,7 +158,7 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Blog post not found");
   }
 
-  let newImageUrl = existingBlogPost.imageUrl;
+  let newImageUrl;
   if (req.files?.length) {
     newImageUrl = await updateCloudinaryImages(
       req,
@@ -202,17 +203,29 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
 const deleteBlogPost = asyncWrapper(async (req, res, next) => {
   const { id: blogId } = req.params;
 
-  const deletedCount = await BlogPost.destroy({
-    where: { id: blogId },
-  });
+  const existingBlogPost = await BlogPost.findByPk(blogId);
+  if (!existingBlogPost) {
+    throw new NotFoundErrorResponse("Blog post not found");
+  }
 
-  if (deletedCount === 0) {
-    throw new Error("Blog not Found");
+  const deleteCloudImages = await deleteCloudinaryImages(
+    "blogPost",
+    existingBlogPost.id
+  );
+
+  if (deleteCloudImages) {
+    const deletedCount = await BlogPost.destroy({
+      where: { id: blogId },
+    });
+
+    if (deletedCount === 0) {
+      throw new NotFoundErrorResponse("Blog post not Found");
+    }
   }
 
   return res
     .status(200)
-    .json({ status: true, message: "Blog deleted successfully" });
+    .json({ status: true, message: "Blog post deleted successfully" });
 });
 
 export {
