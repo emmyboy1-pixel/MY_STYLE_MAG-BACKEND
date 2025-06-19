@@ -1,7 +1,12 @@
+import fs from "fs/promises";
+
 import { BlogPost, Category, User } from "../models/index.js";
 import asyncWrapper from "../middleware/async.js";
 import paginate from "../utils/pagination.js";
 import { NotFoundErrorResponse } from "../utils/error/index.js";
+import { uploadImagesToCloudinary } from "../utils/images/uploadImagesToCloudinary.js";
+import { sequelize } from "../config/dbConfig.js";
+import { updateCloudinaryImages } from "../utils/images/updateCloudinaryImages.js";
 
 const createBlogPost = asyncWrapper(async (req, res, next) => {
   const createdBy = req.user.id;
@@ -12,24 +17,50 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not Found");
   }
 
-  const newBlogPost = await BlogPost.create(
-    {
-      title,
-      content,
-      status,
-      categoryId,
-      createdBy,
-    },
-    {
-      include: [{ model: Category, attributes: ["name"], as: "category" }],
-    }
-  );
+  const tx = await sequelize.transaction();
+  try {
+    const newBlogPost = await BlogPost.create(
+      {
+        title,
+        content,
+        status,
+        categoryId,
+        createdBy,
+      },
+      {
+        transaction: tx,
+        include: [{ model: Category, attributes: ["name"], as: "category" }],
+      }
+    );
+    const imageUrl = await uploadImagesToCloudinary(
+      req,
+      "blogPost",
+      newBlogPost.id
+    );
 
-  return res.status(201).json({
-    status: true,
-    message: "Blog post created successfully",
-    data: newBlogPost,
-  });
+    let updatedBlogPost;
+    if (imageUrl.length !== 0) {
+      updatedBlogPost = await newBlogPost.update(
+        { imageUrl: imageUrl[0] },
+        { transaction: tx }
+      );
+    }
+
+    await tx.commit();
+
+    return res.status(201).json({
+      status: true,
+      message: "Blog post created successfully",
+      images: imageUrl,
+      data: updatedBlogPost,
+    });
+  } catch (error) {
+    if (req.files?.length) {
+      await Promise.all(req.files.map((file) => fs.unlink(file.path)));
+    }
+    await tx.rollback();
+    throw error;
+  }
 });
 
 const getAllBlogPostsForUser = asyncWrapper(async (req, res, next) => {
@@ -121,10 +152,25 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Category not found");
   }
 
+  const existingBlogPost = await BlogPost.findByPk(blogId);
+  if (!existingBlogPost) {
+    throw new NotFoundErrorResponse("Blog post not found");
+  }
+
+  let newImageUrl = existingBlogPost.imageUrl;
+  if (req.files?.length) {
+    newImageUrl = await updateCloudinaryImages(
+      req,
+      "blogPost",
+      existingBlogPost.id
+    );
+  }
+
   const [affectedRows] = await BlogPost.update(
     {
       title,
       content,
+      imageUrl: newImageUrl[0],
       status,
       categoryId,
       updatedBy,

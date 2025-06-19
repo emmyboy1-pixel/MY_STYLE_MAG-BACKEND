@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../uploads/")); // this is a temporary storage location
   },
   filename: function (req, file, cb) {
-    cb(null, req.params.id + "-" + uuidV4() + path.extname(file.originalname));
+    cb(null, uuidV4() + path.extname(file.originalname));
   },
 });
 

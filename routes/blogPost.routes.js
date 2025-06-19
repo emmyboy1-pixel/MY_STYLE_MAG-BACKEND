@@ -13,6 +13,7 @@ import {
 } from "../middleware/authentication.js";
 import { validateBlogPost } from "../utils/validator/validators.js";
 import validateRequestHandler from "../middleware/validation.js";
+import upload from "../middleware/multer.js";
 
 const blogPostRouter = express.Router();
 
@@ -22,6 +23,7 @@ blogPostRouter
   .route("/")
   .get(getAllBlogPostsForUser)
   .post(
+    upload.array("image", 10),
     validateBlogPost,
     validateRequestHandler,
     checkAuthorizedPermissions("admin"),
@@ -35,6 +37,7 @@ blogPostRouter
   .route("/:id")
   .get(getSingleBlogPost)
   .patch(
+    upload.array("image", 10),
     validateBlogPost,
     validateRequestHandler,
     checkAuthorizedPermissions("admin"),
