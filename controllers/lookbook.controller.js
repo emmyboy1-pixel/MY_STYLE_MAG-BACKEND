@@ -1,4 +1,4 @@
-import { Lookbook, Outfit } from "../models/index.js";
+import { Lookbook, Outfit, Category, User } from "../models/index.js";
 import { Op } from "sequelize";
 import asyncWrapper from "../middleware/async.js";
 import {
@@ -35,6 +35,9 @@ export const getAllLookbooks = asyncWrapper(async (req, res, next) => {
   // Get all lookbooks belonging to the user
   const lookBooks = await Lookbook.findAndCountAll({
     where: { userId },
+    attributes: {
+      exclude: ["userId"],
+    },
     order: [["updatedAt", "DESC"]],
   });
 
@@ -53,28 +56,46 @@ export const getSingleLookBook = asyncWrapper(async (req, res, next) => {
   const existingLookBook = await Lookbook.findOne({
     where: {
       [Op.and]: [{ id: lookBookId }, { userId }],
-      include: [
-        {
-          model: Outfit,
-          attributes: ["id", "title", "description", "imageUrls", "categoryId"],
-          as: "outfits",
-          include: {
+    },
+    attributes: {
+      exclude: ["userId"],
+    },
+    include: [
+      {
+        model: Outfit,
+        as: "outfits",
+        through: { attributes: [] },
+        include: [
+          {
             model: Category,
-            attributes: ["id", "name"],
+            attributes: ["name"],
             as: "category",
           },
-        },
-      ],
-    },
+          {
+            model: User,
+            attributes: ["name"],
+            as: "creator",
+          },
+          {
+            model: User,
+            attributes: ["name"],
+            as: "updater",
+          },
+        ],
+      },
+    ],
   });
 
   if (!existingLookBook) {
     throw new NotFoundErrorResponse("LookBook not found");
   }
 
+  const totalOutfits = await existingLookBook.countOutfits();
+
   return res.status(200).json({
     status: true,
     message: "lookBook fetched Successfully",
+    totalOutfits: totalOutfits,
     data: existingLookBook,
   });
 });
@@ -139,5 +160,61 @@ export const deleteLookbook = asyncWrapper(async (req, res, next) => {
   return res.status(200).json({
     status: true,
     message: "LookBook deleted successfully.",
+  });
+});
+
+export const addOutfitToLookBook = asyncWrapper(async (req, res, next) => {
+  const { id: lookBookId } = req.params;
+  const { outfitId } = req.body;
+
+  const existingOutfit = await Outfit.findByPk(outfitId);
+  if (!existingOutfit) {
+    throw new NotFoundErrorResponse("Outfit not found");
+  }
+
+  const existingLookbook = await Lookbook.findByPk(lookBookId);
+  if (!existingLookbook) {
+    throw new NotFoundErrorResponse("Lookbook not found");
+  }
+
+  const linked = await existingLookbook.hasOutfit(outfitId);
+  if (linked) {
+    throw new ConflictErrorResponse("Outfit linked to this lookbook");
+  }
+
+  await existingLookbook.addOutfit(outfitId);
+
+  return res.status(200).json({
+    status: true,
+    message: "Outfit added to Lookbook sucessfully",
+  });
+
+  // Add association between loobookoutfit and outfit
+});
+
+export const deleteOutfitFromLookBook = asyncWrapper(async (req, res, next) => {
+  const { id: lookBookId } = req.params;
+  const { outfitId } = req.body;
+
+  const existingOutfit = await Outfit.findByPk(outfitId);
+  if (!existingOutfit) {
+    throw new NotFoundErrorResponse("Outfit not found");
+  }
+
+  const existingLookbook = await Lookbook.findByPk(lookBookId);
+  if (!existingLookbook) {
+    throw new NotFoundErrorResponse("Lookbook not found");
+  }
+
+  const linked = await existingLookbook.hasOutfit(outfitId);
+  if (!linked) {
+    throw new ConflictErrorResponse("Outfit not linked to this lookbook");
+  }
+
+  await existingLookbook.removeOutfit(outfitId);
+
+  return res.status(200).json({
+    status: true,
+    message: "Outfit deleted from Lookbook sucessfully",
   });
 });

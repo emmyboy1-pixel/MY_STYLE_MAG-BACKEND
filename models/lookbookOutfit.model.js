@@ -14,7 +14,7 @@ const LookbookOutfit = sequelize.define(
     },
     outfitId: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: "Outfits",
         key: "id",
