@@ -1,3 +1,5 @@
+import fs from "fs/promises";
+
 import { Outfit, Category, Tag, User } from "../models/index.js";
 import paginate from "../utils/pagination.js";
 import asyncWrapper from "../middleware/async.js";
@@ -5,9 +7,10 @@ import {
   ConflictErrorResponse,
   NotFoundErrorResponse,
 } from "../utils/error/index.js";
-import { uploadImagesToCloudinary } from "./uploadImage.controller.js";
+import { uploadImagesToCloudinary } from "../utils/images/uploadImagesToCloudinary.js";
 import { updateCloudinaryImages } from "../utils/images/updateCloudinaryImages.js";
 import { deleteCloudinaryImages } from "../utils/images/deleteCloudinaryImages.js";
+import { sequelize } from "../config/dbConfig.js";
 
 export const createOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, categoryId } = req.body;
@@ -41,14 +44,14 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
 
     const imageUrls = await uploadImagesToCloudinary(
       req,
-      "outfits",
+      "outfit",
       newOutfit.id
     );
 
     let updatedOutfit;
     if (imageUrls.length !== 0) {
       updatedOutfit = await newOutfit.update(
-        { imageUrl: imageUrls },
+        { imageUrls },
         { transaction: tx }
       );
     }
@@ -169,7 +172,7 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
   }
 
   const [affectedRows] = await Outfit.update(
-    { title, description, categoryId, updatedBy },
+    { title, description, imageUrls: newImagesUrls, categoryId, updatedBy },
     { where: { id: outfitId } }
   );
 

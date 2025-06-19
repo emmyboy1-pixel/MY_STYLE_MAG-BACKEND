@@ -23,10 +23,10 @@ blogPostRouter
   .route("/")
   .get(getAllBlogPostsForUser)
   .post(
+    checkAuthorizedPermissions("admin"),
     upload.array("image", 10),
     validateBlogPost,
     validateRequestHandler,
-    checkAuthorizedPermissions("admin"),
     createBlogPost
   );
 blogPostRouter
@@ -37,10 +37,10 @@ blogPostRouter
   .route("/:id")
   .get(getSingleBlogPost)
   .patch(
+    checkAuthorizedPermissions("admin"),
     upload.array("image", 10),
     validateBlogPost,
     validateRequestHandler,
-    checkAuthorizedPermissions("admin"),
     updateBlogPost
   )
   .delete(checkAuthorizedPermissions("admin"), deleteBlogPost);

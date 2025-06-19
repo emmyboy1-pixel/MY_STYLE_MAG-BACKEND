@@ -13,7 +13,6 @@ export const uploadImagesToCloudinary = async (req, type, modelId) => {
     );
 
     const results = await Promise.all(uploadImagesPromises);
-    console.log(results);
 
     const urls = results.map((r) => r.secure_url);
 
