@@ -105,7 +105,7 @@ import Tag from "./tag.model.js";
 import BlogPost from "./blogPost.model.js";
 import OutfitTag from "./outfitTag.model.js";
 import BlogPostTag from "./blogPostTag.model.js";
-import LookbookOutfit from "./lookBookOutfit.model.js";
+import LookbookOutfit from "./lookbookOutfit.model.js";
 
 // ========================
 // USER RELATIONSHIPS
@@ -247,13 +247,4 @@ Category.hasMany(Outfit, { foreignKey: "categoryId", as: "outfits" });
 BlogPost.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
 Category.hasMany(BlogPost, { foreignKey: "categoryId", as: "blogPosts" });
 
-export {
-  User,
-  Lookbook,
-  Outfit,
-  Category,
-  Tag,
-  BlogPost,
-  OutfitTag,
-  BlogPostTag,
-};
+export { User, Lookbook, Outfit, Category, Tag, BlogPost };
