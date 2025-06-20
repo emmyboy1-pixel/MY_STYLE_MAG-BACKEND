@@ -48,13 +48,10 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
       newOutfit.id
     );
 
-    let updatedOutfit;
-    if (imageUrls.length !== 0) {
-      updatedOutfit = await newOutfit.update(
-        { imageUrls },
-        { transaction: tx }
-      );
-    }
+    const updatedOutfit = await newOutfit.update(
+      { imageUrls },
+      { transaction: tx }
+    );
 
     await tx.commit();
 

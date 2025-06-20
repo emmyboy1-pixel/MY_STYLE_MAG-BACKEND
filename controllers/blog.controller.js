@@ -33,19 +33,17 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
         include: [{ model: Category, attributes: ["name"], as: "category" }],
       }
     );
+
     const imageUrl = await uploadImagesToCloudinary(
       req,
       "blogPost",
       newBlogPost.id
     );
 
-    let updatedBlogPost;
-    if (imageUrl.length !== 0) {
-      updatedBlogPost = await newBlogPost.update(
-        { imageUrl: imageUrl[0] },
-        { transaction: tx }
-      );
-    }
+    const updatedBlogPost = await newBlogPost.update(
+      { imageUrl: imageUrl[0] },
+      { transaction: tx }
+    );
 
     await tx.commit();
 
