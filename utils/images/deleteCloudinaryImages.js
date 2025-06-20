@@ -2,7 +2,7 @@ import cloudinary from "../../config/cloudinary.js";
 
 export const deleteCloudinaryImages = async (type, modelId) => {
   try {
-    const folderPath = `${type}/${modelId}`;
+    const folderPath = `my_style_mag/${type}/${modelId}`;
     await cloudinary.api.delete_resources_by_prefix(folderPath);
     await cloudinary.api.delete_folder(folderPath);
     return true;

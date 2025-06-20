@@ -8,7 +8,7 @@ export const uploadImagesToCloudinary = async (req, type, modelId) => {
     const uploadImagesPromises = req.files.map((file) =>
       cloudinary.uploader.upload(file.path, {
         use_filename: true,
-        folder: `${type}/${modelId}`,
+        folder: `my_style_mag/${type}/${modelId}`,
       })
     );
 

@@ -16,15 +16,15 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, categoryId } = req.body;
   const createdBy = req.user.id;
 
-  // validating if category exists
-  const category = await Category.findByPk(categoryId);
-  if (!category) {
-    throw new NotFoundErrorResponse("Category not found");
-  }
-
-  const tx = await sequelize.transaction();
-
   try {
+    // validating if category exists
+    const category = await Category.findByPk(categoryId);
+    if (!category) {
+      throw new NotFoundErrorResponse("Category not found");
+    }
+
+    const tx = await sequelize.transaction();
+
     // creating the outfit
     const newOutfit = await Outfit.create(
       {
@@ -141,58 +141,62 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, categoryId } = req.body;
   const updatedBy = req.user.id;
 
-  const existingOutfit = await Outfit.findByPk(outfitId);
-  if (!existingOutfit) {
-    throw new NotFoundErrorResponse("Outfit not found");
-  }
-
-  const category = await Category.findByPk(categoryId);
-  if (!category) {
-    throw new NotFoundErrorResponse("Category not found");
-  }
-
-  if (title !== existingOutfit.title) {
-    const existingOutfitWithSameTitle = await Outfit.findOne({
-      where: { title },
-    });
-    if (existingOutfitWithSameTitle) {
-      throw new ConflictErrorResponse(
-        "You already have another outfit with this name"
-      );
+  try {
+    const existingOutfit = await Outfit.findByPk(outfitId);
+    if (!existingOutfit) {
+      throw new NotFoundErrorResponse("Outfit not found");
     }
-  }
 
-  let newImagesUrls;
-  if (req.files?.length) {
-    newImagesUrls = await updateCloudinaryImages(
+    const category = await Category.findByPk(categoryId);
+    if (!category) {
+      throw new NotFoundErrorResponse("Category not found");
+    }
+
+    if (title !== existingOutfit.title) {
+      const existingOutfitWithSameTitle = await Outfit.findOne({
+        where: { title },
+      });
+      if (existingOutfitWithSameTitle) {
+        throw new ConflictErrorResponse(
+          "You already have another outfit with this name"
+        );
+      }
+    }
+
+    const newImagesUrls = await updateCloudinaryImages(
       req,
       "outfit",
       existingOutfit.id
     );
+
+    const [affectedRows] = await Outfit.update(
+      { title, description, imageUrls: newImagesUrls, categoryId, updatedBy },
+      { where: { id: outfitId } }
+    );
+
+    if (affectedRows === 0) {
+      throw new NotFoundErrorResponse("Outfit not found or not updated");
+    }
+
+    const updatedOutfit = await Outfit.findByPk(outfitId, {
+      include: [
+        { model: Category, attributes: ["name"], as: "category" },
+        { model: User, attributes: ["name"], as: "creator" },
+        { model: User, attributes: ["name"], as: "updater" },
+      ],
+    });
+
+    res.status(200).json({
+      status: true,
+      message: "Outfit Updated Successfully",
+      data: updatedOutfit,
+    });
+  } catch (error) {
+    if (req.files?.length) {
+      await Promise.all(req.files.map((file) => fs.unlink(file.path)));
+    }
+    throw error;
   }
-
-  const [affectedRows] = await Outfit.update(
-    { title, description, imageUrls: newImagesUrls, categoryId, updatedBy },
-    { where: { id: outfitId } }
-  );
-
-  if (affectedRows === 0) {
-    throw new NotFoundErrorResponse("Outfit not found or not updated");
-  }
-
-  const updatedOutfit = await Outfit.findByPk(outfitId, {
-    include: [
-      { model: Category, attributes: ["name"], as: "category" },
-      { model: User, attributes: ["name"], as: "creator" },
-      { model: User, attributes: ["name"], as: "updater" },
-    ],
-  });
-
-  res.status(200).json({
-    status: true,
-    message: "Outfit Updated Successfully",
-    data: updatedOutfit,
-  });
 });
 
 export const deleteOutfit = asyncWrapper(async (req, res, next) => {

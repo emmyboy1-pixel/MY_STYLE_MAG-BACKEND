@@ -2,10 +2,14 @@ import fs from "fs/promises";
 import cloudinary from "../../config/cloudinary.js";
 
 export const updateCloudinaryImages = async (req, type, modelId) => {
-  if (!req.files || req.files.length === 0) return [];
+  const folderPath = `my_style_mag/${type}/${modelId}`;
+
+  if (!req.files || req.files.length === 0) {
+    await cloudinary.api.delete_resources_by_prefix(folderPath);
+    return [];
+  }
 
   try {
-    let folderPath = `${type}/${modelId}`;
     await cloudinary.api.delete_resources_by_prefix(folderPath);
 
     const uploadImagesPromises = req.files.map((file) =>

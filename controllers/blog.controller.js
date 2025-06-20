@@ -13,13 +13,14 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
   const createdBy = req.user.id;
   const { title, content, status, categoryId } = req.body;
 
-  const existingCategory = await Category.findByPk(categoryId);
-  if (!existingCategory) {
-    throw new NotFoundErrorResponse("Category not Found");
-  }
-
-  const tx = await sequelize.transaction();
   try {
+    const existingCategory = await Category.findByPk(categoryId);
+    if (!existingCategory) {
+      throw new NotFoundErrorResponse("Category not Found");
+    }
+
+    const tx = await sequelize.transaction();
+
     const newBlogPost = await BlogPost.create(
       {
         title,
@@ -148,56 +149,60 @@ const updateBlogPost = asyncWrapper(async (req, res, next) => {
   const { id: blogId } = req.params;
   const { title, content, status, categoryId } = req.body;
 
-  const existingCategory = await Category.findByPk(categoryId);
-  if (!existingCategory) {
-    throw new NotFoundErrorResponse("Category not found");
-  }
+  try {
+    const existingCategory = await Category.findByPk(categoryId);
+    if (!existingCategory) {
+      throw new NotFoundErrorResponse("Category not found");
+    }
 
-  const existingBlogPost = await BlogPost.findByPk(blogId);
-  if (!existingBlogPost) {
-    throw new NotFoundErrorResponse("Blog post not found");
-  }
+    const existingBlogPost = await BlogPost.findByPk(blogId);
+    if (!existingBlogPost) {
+      throw new NotFoundErrorResponse("Blog post not found");
+    }
 
-  let newImageUrl;
-  if (req.files?.length) {
-    newImageUrl = await updateCloudinaryImages(
+    const newImageUrl = await updateCloudinaryImages(
       req,
       "blogPost",
       existingBlogPost.id
     );
-  }
 
-  const [affectedRows] = await BlogPost.update(
-    {
-      title,
-      content,
-      imageUrl: newImageUrl[0],
-      status,
-      categoryId,
-      updatedBy,
-    },
-    {
-      where: { id: blogId },
+    const [affectedRows] = await BlogPost.update(
+      {
+        title,
+        content,
+        imageUrl: newImageUrl.length > 0 ? newImageUrl[0] : null,
+        status,
+        categoryId,
+        updatedBy,
+      },
+      {
+        where: { id: blogId },
+      }
+    );
+
+    if (affectedRows === 0) {
+      throw new NotFoundErrorResponse("Blog post not found or not updated");
     }
-  );
 
-  if (affectedRows === 0) {
-    throw new NotFoundErrorResponse("Blog post not found or not updated");
+    const updatedBlogPost = await BlogPost.findByPk(blogId, {
+      include: [
+        { model: Category, attributes: ["name"], as: "category" },
+        { model: User, attributes: ["name"], as: "creator" },
+        { model: User, attributes: ["name"], as: "updater" },
+      ],
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "Blog post updated successfully",
+      data: updatedBlogPost,
+    });
+  } catch (error) {
+    if (req.files?.length) {
+      await Promise.all(req.files.map((file) => fs.unlink(file.path)));
+    }
+    throw error;
   }
-
-  const updatedBlogPost = await BlogPost.findByPk(blogId, {
-    include: [
-      { model: Category, attributes: ["name"], as: "category" },
-      { model: User, attributes: ["name"], as: "creator" },
-      { model: User, attributes: ["name"], as: "updater" },
-    ],
-  });
-
-  return res.status(200).json({
-    status: true,
-    message: "Blog post updated successfully",
-    data: updatedBlogPost,
-  });
 });
 
 const deleteBlogPost = asyncWrapper(async (req, res, next) => {

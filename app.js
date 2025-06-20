@@ -6,15 +6,14 @@ import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { sequelize } from "./config/dbConfig.js";
 
+import { sequelize } from "./config/dbConfig.js";
 import outfitRouter from "./routes/outfit.routes.js";
 import lookBookRouter from "./routes/lookbook.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
-import uploadroute from "./routes/uploadroute.js";
 import errorHandler from "./middleware/errorHandler.js";
 import adminRoutes from "./routes/adminRoute.js";
 
@@ -75,14 +74,13 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/v1/lookbook", lookBookRouter);
 app.use("/api/v1/outfits", outfitRouter);
-app.use("/api/v1/", uploadroute);
-app.use(errorHandler);
 app.use("/api/v1/admin", adminRoutes);
+app.use(errorHandler);
 
 // syncing database and running port number
 
 sequelize
-  .sync({ alter: true })
+  .sync({ alter: false })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
