@@ -89,7 +89,6 @@ const logOut = asyncWrapper(async (req, res, next) => {
     .json({ status: true, message: "User Logged Out Successfully" });
 });
 
-// TODO:  sendVerificationEmail, verifyEmail.
 const forgotPassword = asyncWrapper(async (req, res, next) => {
   const { email } = req.body;
 

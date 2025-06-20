@@ -1,4 +1,3 @@
-// TODO: Implement user controller endpoints.
 import User from "../models/user.model.js";
 import asyncWrapper from "../middleware/async.js";
 import paginate from "../utils/pagination.js";

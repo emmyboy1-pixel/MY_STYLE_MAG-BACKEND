@@ -6,8 +6,6 @@ import {
   NotFoundErrorResponse,
 } from "../utils/error/index.js";
 
-//TODO: Update LookBook Model
-
 export const createLookbook = asyncWrapper(async (req, res, next) => {
   const { name } = req.body;
   const { id: userId } = req.user;

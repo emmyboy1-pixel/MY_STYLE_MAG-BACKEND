@@ -70,7 +70,6 @@ app.get("/api/v1/auth", authenticateUser, (req, res) => {
 // API documentation
 app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// TODO: Add Validators for every data.
 // routes here
 app.use("/api/v1", authRouter);
 app.use("/api/v1/category", categoryRouter);
