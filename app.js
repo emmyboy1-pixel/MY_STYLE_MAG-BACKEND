@@ -18,7 +18,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import notFound from "./middleware/notFound.js";
 
-//TODO: Implement logging action
+//TODO: Implement logging and security
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -83,7 +83,7 @@ app.use(errorHandler);
 // syncing database and running port number
 
 sequelize
-  .sync({ alter: false })
+  .sync({ alter: true })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);

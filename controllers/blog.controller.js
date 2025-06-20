@@ -13,13 +13,12 @@ const createBlogPost = asyncWrapper(async (req, res, next) => {
   const createdBy = req.user.id;
   const { title, content, status, categoryId } = req.body;
 
+  const tx = await sequelize.transaction();
   try {
     const existingCategory = await Category.findByPk(categoryId);
     if (!existingCategory) {
       throw new NotFoundErrorResponse("Category not Found");
     }
-
-    const tx = await sequelize.transaction();
 
     const newBlogPost = await BlogPost.create(
       {

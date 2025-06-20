@@ -16,14 +16,14 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
   const { title, description, categoryId } = req.body;
   const createdBy = req.user.id;
 
+  const tx = await sequelize.transaction();
+
   try {
     // validating if category exists
     const category = await Category.findByPk(categoryId);
     if (!category) {
       throw new NotFoundErrorResponse("Category not found");
     }
-
-    const tx = await sequelize.transaction();
 
     // creating the outfit
     const newOutfit = await Outfit.create(
