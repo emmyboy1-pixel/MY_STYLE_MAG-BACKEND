@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
 import { UnProcessableEntityErrorResponse } from "../utils/error/index.js";
 
-const validateRequestHandler = (req, res, next) => {
+const validateRequestHandler = async (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
     const formattedErrors = {};
@@ -12,6 +12,10 @@ const validateRequestHandler = (req, res, next) => {
       }
       formattedErrors[error.path].push(error.msg);
     });
+
+    if (req.files?.length) {
+      await Promise.all(req.files.map((file) => fs.unlink(file.path)));
+    }
 
     throw new UnProcessableEntityErrorResponse(
       `Validation failed: ${JSON.stringify(formattedErrors, null, 2)}`

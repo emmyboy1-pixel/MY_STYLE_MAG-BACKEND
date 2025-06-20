@@ -11,6 +11,8 @@ import {
   checkAuthorizedPermissions,
 } from "../middleware/authentication.js";
 import upload from "../middleware/multer.js";
+import validateRequestHandler from "../middleware/validation.js";
+import { validateOutfit } from "../utils/validator/validators.js";
 
 const outfitRouter = express.Router();
 
@@ -22,6 +24,8 @@ outfitRouter
   .post(
     checkAuthorizedPermissions("admin"),
     upload.array("image", 10),
+    validateOutfit,
+    validateRequestHandler,
     createOutfit
   );
 
@@ -31,6 +35,8 @@ outfitRouter
   .patch(
     checkAuthorizedPermissions("admin"),
     upload.array("image", 10),
+    validateOutfit,
+    validateRequestHandler,
     updateOutfit
   )
   .delete(checkAuthorizedPermissions("admin"), deleteOutfit);

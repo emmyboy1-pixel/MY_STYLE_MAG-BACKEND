@@ -34,10 +34,6 @@ export const validateRole = body("role")
   .isIn(["admin", "user"])
   .withMessage("Role must be either 'admin' or 'user'");
 
-export const validateId = param("id")
-  .notEmpty()
-  .withMessage("Id is required for this route");
-
 export const validateBlogPost = [
   body("title").notEmpty().withMessage("Title is required"),
   body("content").notEmpty().withMessage("Content is required"),
@@ -46,3 +42,13 @@ export const validateBlogPost = [
     .withMessage("Invalid status"),
   body("categoryId").notEmpty().withMessage("Category ID is required"),
 ];
+
+export const validateOutfit = [
+  body("title").notEmpty().withMessage("Title is required"),
+  body("description").notEmpty().withMessage("Content is required"),
+  body("categoryId").notEmpty().withMessage("Category ID is required"),
+];
+
+export const validateId = body("outfitId")
+  .notEmpty()
+  .withMessage("Outfit ID is required for this route");

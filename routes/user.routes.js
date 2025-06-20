@@ -7,18 +7,10 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get(
-  "/",
-  authenticateUser,
-  checkAuthorizedPermissions("admin"),
-  getAllUsers
-);
+userRouter.use(authenticateUser);
 
-userRouter.delete(
-  "/:id",
-  authenticateUser,
-  checkAuthorizedPermissions("admin"),
-  deleteUser
-);
+userRouter.get("/", checkAuthorizedPermissions("admin"), getAllUsers);
+
+userRouter.delete("/:id", checkAuthorizedPermissions("admin"), deleteUser);
 
 export default userRouter;
