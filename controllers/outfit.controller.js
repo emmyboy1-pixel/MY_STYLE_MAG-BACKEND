@@ -99,7 +99,7 @@ export const getAllOutfits = asyncWrapper(async (req, res, next) => {
     include: includeClause,
     offset: paginate(limit, page),
     limit: limit,
-    order: [["createdAt", "DESC"]],
+    order: [["updatedAt", "DESC"]],
     include: [
       { model: Category, attributes: ["name"], as: "category" },
       { model: User, attributes: ["name"], as: "creator" },

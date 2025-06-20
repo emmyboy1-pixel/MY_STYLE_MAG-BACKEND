@@ -7,6 +7,7 @@ import { Op } from "sequelize";
 import {
   BadRequestErrorResponse,
   NotFoundErrorResponse,
+  UnAuthorizedErrorResponse,
 } from "../utils/error/index.js";
 import asyncWrapper from "../middleware/async.js";
 
@@ -17,12 +18,18 @@ const generateToken = () => {
 };
 
 const register = asyncWrapper(async (req, res, next) => {
-  const { name, email, password, phoneNo, role } = req.body;
+  const { name, email, password, phoneNo, role, adminKey } = req.body;
 
   const existingEmail = await User.findOne({ where: { email: email } });
 
   if (existingEmail) {
     throw new BadRequestErrorResponse("Email Already in use");
+  }
+
+  if (role === "admin" && adminKey !== process.env.ADMIN_SECRET_KEY) {
+    throw new UnAuthorizedErrorResponse(
+      "You're not authorized to create this type of account"
+    );
   }
 
   const hashed_password = bcrypt.hashSync(password, 10);

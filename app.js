@@ -15,7 +15,10 @@ import authRouter from "./routes/auth.routes.js";
 import blogPostRouter from "./routes/blogPost.routes.js";
 import { authenticateUser } from "./middleware/authentication.js";
 import errorHandler from "./middleware/errorHandler.js";
-import adminRoutes from "./routes/adminRoute.js";
+import userRouter from "./routes/user.routes.js";
+import notFound from "./middleware/notFound.js";
+
+//TODO: Implement logging action
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -74,7 +77,8 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/v1/lookbook", lookBookRouter);
 app.use("/api/v1/outfits", outfitRouter);
-app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/users", userRouter);
+app.use(notFound);
 app.use(errorHandler);
 
 // syncing database and running port number
