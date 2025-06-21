@@ -61,11 +61,12 @@ export const createOutfit = asyncWrapper(async (req, res, next) => {
       data: updatedOutfit,
     });
   } catch (error) {
+    await tx.rollback();
+    throw error;
+  } finally {
     if (req.files?.length) {
       await Promise.all(req.files.map((file) => fs.unlink(file.path)));
     }
-    await tx.rollback();
-    throw error;
   }
 });
 
@@ -189,10 +190,11 @@ export const updateOutfit = asyncWrapper(async (req, res, next) => {
       data: updatedOutfit,
     });
   } catch (error) {
+    throw error;
+  } finally {
     if (req.files?.length) {
       await Promise.all(req.files.map((file) => fs.unlink(file.path)));
     }
-    throw error;
   }
 });
 

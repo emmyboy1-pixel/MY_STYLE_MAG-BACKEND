@@ -23,9 +23,6 @@ export const updateCloudinaryImages = async (req, type, modelId) => {
 
     const urls = results.map((r) => r.secure_url);
 
-    // clean up local files
-    await Promise.all(req.files.map((file) => fs.unlink(file.path)));
-
     return urls;
   } catch (error) {
     throw new Error(`Failed to upload images to Cloudinary: ${error.message}`);
