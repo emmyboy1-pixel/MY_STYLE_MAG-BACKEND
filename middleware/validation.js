@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { UnProcessableEntityErrorResponse } from "../utils/error/index.js";
+import fs from "fs/promises";
 
 const validateRequestHandler = async (req, res, next) => {
   const result = validationResult(req);

@@ -1,4 +1,3 @@
-import fs from "fs/promises";
 import cloudinary from "../../config/cloudinary.js";
 
 export const updateCloudinaryImages = async (req, type, modelId) => {
