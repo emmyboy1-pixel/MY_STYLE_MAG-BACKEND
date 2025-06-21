@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "TechCrush API",
+    "description": "",
     "version": "1.0.0",
-    "description": "Authentication endpoints for TechCrush API",
     "contact": {}
   },
   "servers": [
@@ -16,35 +16,35 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "Register",
-        "description": "Creates a new user account by providing name, email, and password.",
+        "description": "",
         "operationId": "postapiv1register",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "email": { "type": "string", "format": "email" },
-                  "password": { "type": "string", "format": "password" }
-                },
                 "example": {
                   "name": "taylor",
-                  "email": "dabataylor2@gmail.com",
-                  "password": "password"
+                  "email": "admin@gmail.com",
+                  "password": "Pass@word1",
+                  "role": "admin",
+                  "admKey": "11111"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful registration returns the newly created user details.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object" }
               }
             }
           }
@@ -55,33 +55,32 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "Login",
-        "description": "Authenticates a user using email and password and returns an access token.",
+        "description": "",
         "operationId": "postapiv1login",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "email": { "type": "string", "format": "email" },
-                  "password": { "type": "string", "format": "password" }
-                },
                 "example": {
-                  "email": "dabataylor2@gmail.com",
-                  "password": "12345"
+                  "email": "taylorokis@yahoo.com",
+                  "password": "Pass@word1"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful login returns authentication token and user info.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object" }
               }
             }
           }
@@ -89,20 +88,29 @@
       }
     },
     "/api/v1/logout": {
-      "get": {
+      "post": {
         "tags": ["Authentication"],
         "summary": "Logout",
-        "description": "Logs out the authenticated user by invalidating their current session or token.",
-        "operationId": "getapiv1logout",
+        "description": "",
+        "operationId": "postapiv1logout",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Successful logout confirmation.",
+            "description": "Successful response",
             "content": {
               "application/json": {
-                "schema": { "type": "object" }
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
               }
             }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {}
           }
         }
       }
@@ -111,31 +119,31 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "Forgot Password",
-        "description": "Initiates password reset by sending a token to the user's email address.",
+        "description": "",
         "operationId": "postapiv1forgotPassword",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "email": { "type": "string", "format": "email" }
-                },
                 "example": {
-                  "email": "dabataylor2@gmail.com"
+                  "email": "user@ggg.com"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful initiation of password reset process.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object" }
               }
             }
           }
@@ -146,33 +154,32 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "Verify Reset Token",
-        "description": "Verifies the validity of the password reset token for a given email.",
+        "description": "",
         "operationId": "postapiv1verifyResetToken",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "email": { "type": "string", "format": "email" },
-                  "resetToken": { "type": "string" }
-                },
                 "example": {
-                  "email": "dabataylor2@gmail.com",
+                  "email": "dabataylor2@gmai@l.com",
                   "resetToken": "349824"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Confirmation of reset token validity.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object" }
               }
             }
           }
@@ -183,35 +190,33 @@
       "post": {
         "tags": ["Authentication"],
         "summary": "Change Password",
-        "description": "Resets the user's password using a valid reset token and a new password.",
+        "description": "",
         "operationId": "postapiv1changePassword",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "email": { "type": "string", "format": "email" },
-                  "resetToken": { "type": "string" },
-                  "newPassword": { "type": "string", "format": "password" }
-                },
                 "example": {
-                  "newPassword": "newPassword",
+                  "password": "newPassword",
                   "resetToken": "349824",
-                  "email": "dabataylor2@gmail.com"
+                  "email": "dabataylor2@gmail@.com"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Confirmation of successful password change.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object" }
               }
             }
           }
@@ -221,21 +226,770 @@
     "/api/v1/auth": {
       "get": {
         "tags": ["Authentication"],
-        "summary": "Test Auth",
-        "description": "Validates current user credentials to ensure the session or token is active.",
+        "summary": "Test auth",
+        "description": "",
         "operationId": "getapiv1auth",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Returns confirmation if authentication is valid.",
+            "description": "Successful response",
             "content": {
               "application/json": {
-                "schema": { "type": "object" }
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/category": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "Create Category",
+        "description": "",
+        "operationId": "postapiv1category",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Ankara"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "summary": "Get All Categories",
+        "description": "",
+        "operationId": "get3000apiv1category",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/category/:id": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "Get Single Category",
+        "description": "",
+        "operationId": "getapiv1category37313669ad8b4bcf89b949aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Category"],
+        "summary": "Update Category",
+        "description": "",
+        "operationId": "patchapiv1category1ee0ac1927d74b98bb13c00163e41ae1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Traditional"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Category"],
+        "summary": "Delete Category",
+        "description": "",
+        "operationId": "deleteapiv1category37313669ad8b4bcf89b949aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/outfits": {
+      "post": {
+        "tags": ["Outfit"],
+        "summary": "Create Outfit",
+        "description": "",
+        "operationId": "postapiv1outfits",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "test delete"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "cloudinary"
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "example": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Outfit"],
+        "summary": "Get All Outfits",
+        "description": "",
+        "operationId": "getapiv1outfits",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/outfits/:id": {
+      "get": {
+        "tags": ["Outfit"],
+        "summary": "Get Single Outfit",
+        "description": "",
+        "operationId": "get3000apiv1outfitsc70bd17bc5c24a15b6a70041d43a8771",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Outfit"],
+        "summary": "Update Outfit",
+        "description": "",
+        "operationId": "patchapiv1outfits0c79d61122664545baf4fd97c7cf3948",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "European"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "European eunich"
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "example": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Outfit"],
+        "summary": "Delete Outfit",
+        "description": "",
+        "operationId": "deleteapiv1outfitsc70bd17bc5c24a15b6a70041d43a8771",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blog": {
+      "post": {
+        "tags": ["Blog"],
+        "summary": "Create Blog Post",
+        "description": "",
+        "operationId": "postapiv1blog",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Testing 20"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Testing Create"
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "example": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "Published"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blog/": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get All Blog Posts",
+        "description": "",
+        "operationId": "getapiv1blog",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blog/:id": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get Single Blog Post",
+        "description": "",
+        "operationId": "getapiv1blog34ae9fcb9cb94999b3565a87fc17f3ad",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Blog"],
+        "summary": "Update Blog Post",
+        "description": "",
+        "operationId": "patchapiv1blogabc8a98c4667497d91b7aee41985eebd",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Delete update"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "This is to test delete function"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "Published"
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "example": "1ee0ac19-27d7-4b98-bb13-c00163e41ae1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blog"],
+        "summary": "Delete Blog Post",
+        "description": "",
+        "operationId": "deleteapiv1blog34ae9fcb9cb94999b3565a87fc17f3ad",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blog/admin": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get All Blog Posts For Admin",
+        "description": "",
+        "operationId": "getapiv1blogadmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lookbook/": {
+      "post": {
+        "tags": ["LookBook"],
+        "summary": "Create Lookbook",
+        "description": "",
+        "operationId": "postapiv1lookbook",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Wedding Party"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["LookBook"],
+        "summary": "Get All LookBooks",
+        "description": "",
+        "operationId": "get3000apiv1lookbook",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lookbook/:id": {
+      "get": {
+        "tags": ["LookBook"],
+        "summary": "Get Single LookBook",
+        "description": "",
+        "operationId": "getapiv1lookbook37313669ad8b4bcf89b949aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["LookBook"],
+        "summary": "Update LookBook",
+        "description": "",
+        "operationId": "patchapiv1lookbook37313669ad8b4bcf89b949aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "Hangout"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LookBook"],
+        "summary": "Delete LookBook",
+        "description": "",
+        "operationId": "deleteapiv1lookbook37313669-ad8b-4bcf-89b9-49aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lookbook/outfit/:id": {
+      "post": {
+        "tags": ["LookBook"],
+        "summary": "Add Outfit to lookbook",
+        "description": "",
+        "operationId": "postapiv1lookbookoutfit017abec612784bd1bd8c511b4b469263",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "outfitId": "5938ea50-f951-4bf5-ac12-c6545588a092"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["LookBook"],
+        "summary": "Remove Outfit from Lookbook",
+        "description": "",
+        "operationId": "deleteapiv1lookbookoutfit37313669ad8b4bcf89b949aecd820c08",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get all users",
+        "description": "",
+        "operationId": "getapiv1users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/users/id": {
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete User",
+        "description": "",
+        "operationId": "deleteapiv2usersd01760440446434d90de9cec26d2535a",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
               }
             }
           }
         }
       }
     }
-  }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "digestAuth": {
+        "type": "http",
+        "scheme": "digest"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": ""
+    },
+    {
+      "name": "Category",
+      "description": ""
+    },
+    {
+      "name": "Outfit",
+      "description": ""
+    },
+    {
+      "name": "Blog",
+      "description": ""
+    },
+    {
+      "name": "LookBook",
+      "description": ""
+    },
+    {
+      "name": "User",
+      "description": ""
+    }
+  ]
 }

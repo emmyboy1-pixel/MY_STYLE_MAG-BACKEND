@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"taylor\",\r\n    \"email\": \"dabataylor2@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"name\": \"taylor\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"Pass@word1\",\r\n    \"role\": \"admin\",\r\n    \"admKey\": \"11111\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -45,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"dabataylor2@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"raw": "{\r\n    \"email\": \"taylorokis@yahoo.com\",\r\n    \"password\": \"Pass@word1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -69,15 +69,12 @@
 				},
 				{
 					"name": "Logout",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user2@email.com\",\r\n    \"password\": \"password\"\r\n}"
+							"raw": ""
 						},
 						"url": {
 							"raw": "localhost:3000/api/v1/logout",
@@ -101,7 +98,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"dabataylor2@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"user@ggg.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -130,7 +127,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"dabataylor2@gmail.com\",\r\n    \"resetToken\": \"349824\"\r\n}",
+							"raw": "{\r\n    \"email\": \"dabataylor2@gmai@l.com\",\r\n    \"resetToken\": \"349824\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -159,7 +156,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"newPassword\": \"newPassword\",\r\n    \"resetToken\": \"349824\",\r\n    \"email\": \"dabataylor2@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"password\": \"newPassword\",\r\n    \"resetToken\": \"349824\",\r\n    \"email\": \"dabataylor2@gmail@.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -220,7 +217,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Northern\",\r\n    \"type\": \"outfit\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ankara\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -228,7 +225,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/categories",
+							"raw": "localhost:3000/api/v1/category",
 							"host": [
 								"localhost"
 							],
@@ -236,7 +233,7 @@
 							"path": [
 								"api",
 								"v1",
-								"categories"
+								"category"
 							]
 						}
 					},
@@ -252,10 +249,10 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Traditional\",\r\n    \"type\": \"outfit\"\r\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/categories",
+							"raw": "localhost:3000/api/v1/category",
 							"host": [
 								"localhost"
 							],
@@ -263,7 +260,7 @@
 							"path": [
 								"api",
 								"v1",
-								"categories"
+								"category"
 							]
 						}
 					},
@@ -282,7 +279,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/categories/5",
+							"raw": "localhost:3000/api/v1/category/37313669-ad8b-4bcf-89b9-49aecd820c08",
 							"host": [
 								"localhost"
 							],
@@ -290,8 +287,8 @@
 							"path": [
 								"api",
 								"v1",
-								"categories",
-								"5"
+								"category",
+								"37313669-ad8b-4bcf-89b9-49aecd820c08"
 							]
 						}
 					},
@@ -300,11 +297,11 @@
 				{
 					"name": "Update Category",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Northern\",\r\n    \"type\": \"outfit\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Traditional\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -312,7 +309,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/categories/2",
+							"raw": "localhost:3000/api/v1/category/1ee0ac19-27d7-4b98-bb13-c00163e41ae1",
 							"host": [
 								"localhost"
 							],
@@ -320,8 +317,8 @@
 							"path": [
 								"api",
 								"v1",
-								"categories",
-								"2"
+								"category",
+								"1ee0ac19-27d7-4b98-bb13-c00163e41ae1"
 							]
 						}
 					},
@@ -337,7 +334,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/categories/2",
+							"raw": "localhost:3000/api/v1/category/37313669-ad8b-4bcf-89b9-49aecd820c08",
 							"host": [
 								"localhost"
 							],
@@ -345,8 +342,8 @@
 							"path": [
 								"api",
 								"v1",
-								"categories",
-								"2"
+								"category",
+								"37313669-ad8b-4bcf-89b9-49aecd820c08"
 							]
 						}
 					},
@@ -363,13 +360,29 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"test\",\r\n    \"description\": \"test\",\r\n    \"imageUrl\": \"test\",\r\n    \"categoryId\": 4\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot 2025-06-17 211615.png"
+								},
+								{
+									"key": "title",
+									"value": "test delete",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "cloudinary",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "localhost:3000/api/v1/outfits",
@@ -426,7 +439,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/outfits/1",
+							"raw": "localhost:3000/api/v1/outfits/c70bd17b-c5c2-4a15-b6a7-0041d43a8771",
 							"host": [
 								"localhost"
 							],
@@ -435,7 +448,7 @@
 								"api",
 								"v1",
 								"outfits",
-								"1"
+								"c70bd17b-c5c2-4a15-b6a7-0041d43a8771"
 							]
 						}
 					},
@@ -444,19 +457,39 @@
 				{
 					"name": "Update Outfit",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Western\",\r\n    \"description\": \"Western attire\",\r\n    \"imageUrl\": \"href=####\",\r\n    \"categoryId\": 3\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": [
+										"/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot 2025-03-27 235237.png",
+										"/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot (5).png",
+										"/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot 2025-03-25 174951.png"
+									]
+								},
+								{
+									"key": "title",
+									"value": "European",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "European eunich",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/outfits/2",
+							"raw": "localhost:3000/api/v1/outfits/0c79d611-2266-4545-baf4-fd97c7cf3948",
 							"host": [
 								"localhost"
 							],
@@ -465,7 +498,7 @@
 								"api",
 								"v1",
 								"outfits",
-								"2"
+								"0c79d611-2266-4545-baf4-fd97c7cf3948"
 							]
 						}
 					},
@@ -481,7 +514,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/outfits/4",
+							"raw": "localhost:3000/api/v1/outfits/c70bd17b-c5c2-4a15-b6a7-0041d43a8771",
 							"host": [
 								"localhost"
 							],
@@ -490,7 +523,474 @@
 								"api",
 								"v1",
 								"outfits",
-								"4"
+								"c70bd17b-c5c2-4a15-b6a7-0041d43a8771"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Create Blog Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot 2025-06-17 211615.png"
+								},
+								{
+									"key": "title",
+									"value": "Testing 20",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Testing Create",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "1da0c360-4d01-4fc0-a779-6ec9cf9a7956",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "Published",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/blog",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Blog Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/blog/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Blog Post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/blog/34ae9fcb-9cb9-4999-b356-5a87fc17f3ad",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog",
+								"34ae9fcb-9cb9-4999-b356-5a87fc17f3ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog Post",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/dabat/OneDrive/Pictures/Screenshots/Screenshot 2025-03-19 205606.png"
+								},
+								{
+									"key": "title",
+									"value": "Delete update",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "This is to test delete function",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "Published",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "1ee0ac19-27d7-4b98-bb13-c00163e41ae1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/blog/abc8a98c-4667-497d-91b7-aee41985eebd",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog",
+								"abc8a98c-4667-497d-91b7-aee41985eebd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog Post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/blog/34ae9fcb-9cb9-4999-b356-5a87fc17f3ad",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog",
+								"34ae9fcb-9cb9-4999-b356-5a87fc17f3ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Blog Posts For Admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/blog/admin",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"blog",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LookBook",
+			"item": [
+				{
+					"name": "Create Lookbook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Wedding Party\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All LookBooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single LookBook",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/37313669-ad8b-4bcf-89b9-49aecd820c08",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								"37313669-ad8b-4bcf-89b9-49aecd820c08"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update LookBook",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Hangout\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/37313669-ad8b-4bcf-89b9-49aecd820c08",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								"37313669-ad8b-4bcf-89b9-49aecd820c08"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete LookBook",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/7",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Outfit to lookbook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"outfitId\": \"5938ea50-f951-4bf5-ac12-c6545588a092\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/outfit/017abec6-1278-4bd1-bd8c-511b4b469263",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								"outfit",
+								"017abec6-1278-4bd1-bd8c-511b4b469263"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Outfit from Lookbook",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"outfitId\": \"5938ea50-f951-4bf5-ac12-c6545588a092\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/lookbook/outfit/37313669-ad8b-4bcf-89b9-49aecd820c08",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lookbook",
+								"outfit",
+								"37313669-ad8b-4bcf-89b9-49aecd820c08"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"adminKey\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v3/users/d0176044-0446-434d-90de-9cec26d2535a",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v3",
+								"users",
+								"d0176044-0446-434d-90de-9cec26d2535a"
 							]
 						}
 					},
