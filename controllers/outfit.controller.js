@@ -206,12 +206,18 @@ export const deleteOutfit = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Outfit not found");
   }
 
-  const deleteCloudImages = await deleteCloudinaryImages(
-    "outfit",
-    existingOutfit.id
-  );
+  let deleteCloudImages = false;
+  if (existingOutfit.imageUrls.length !== 0) {
+    deleteCloudImages = await deleteCloudinaryImages(
+      "outfit",
+      existingOutfit.id
+    );
+  }
 
-  if (deleteCloudImages) {
+  if (
+    (existingOutfit.imageUrls.length !== 0 && deleteCloudImages) ||
+    existingOutfit.imageUrls.length === 0
+  ) {
     const deletedCount = await Outfit.destroy({
       where: { id: outfitId },
     });

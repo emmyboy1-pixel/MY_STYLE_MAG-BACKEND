@@ -212,12 +212,18 @@ const deleteBlogPost = asyncWrapper(async (req, res, next) => {
     throw new NotFoundErrorResponse("Blog post not found");
   }
 
-  const deleteCloudImages = await deleteCloudinaryImages(
-    "blogPost",
-    existingBlogPost.id
-  );
+  let deletedCloudImages = false;
+  if (existingBlogPost.imageUrl != null) {
+    deletedCloudImages = await deleteCloudinaryImages(
+      "blogPost",
+      existingBlogPost.id
+    );
+  }
 
-  if (deleteCloudImages) {
+  if (
+    (existingBlogPost.imageUrl && deletedCloudImages) ||
+    existingBlogPost.imageUrl === null
+  ) {
     const deletedCount = await BlogPost.destroy({
       where: { id: blogId },
     });
