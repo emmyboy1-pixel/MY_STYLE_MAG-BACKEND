@@ -6,6 +6,8 @@ import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import helmet from "helmet";
+import { rateLimit } from "express-rate-limit";
 
 import { sequelize } from "./config/dbConfig.js";
 import outfitRouter from "./routes/outfit.routes.js";
@@ -17,8 +19,9 @@ import { authenticateUser } from "./middleware/authentication.js";
 import errorHandler from "./middleware/errorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import notFound from "./middleware/notFound.js";
+import searchRouter from "./routes/search.routes.js";
 
-//TODO: Implement logging and security
+//TODO: Implement logging
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -36,7 +39,7 @@ const allowedOrigins = [
   "http://l27.0.0.1:5000",
   "http://localhost:5500",
   "http://127.0.0.1:5500",
-  "https://captone-project-two.vercel.app",
+  "https://capstone-final-tau.vercel.app/",
 ];
 
 const corsOptions = {
@@ -50,7 +53,16 @@ const corsOptions = {
   credentials: true,
 };
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
+
 const app = express();
+
+app.set("trust proxy", 1);
 
 // simple get request on localhost
 app.get("/", (req, res) => {
@@ -59,6 +71,8 @@ app.get("/", (req, res) => {
 
 // middlewares here
 app.use(express.json());
+app.use(helmet());
+app.use(limiter);
 app.use(cors(corsOptions));
 app.use(cookieParser(process.env.JWT_SECRET));
 
@@ -77,6 +91,7 @@ app.use("/api/v1/blog", blogPostRouter);
 app.use("/api/v1/lookbook", lookBookRouter);
 app.use("/api/v1/outfits", outfitRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/search", searchRouter);
 app.use(notFound);
 app.use(errorHandler);
 

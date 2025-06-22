@@ -930,7 +930,7 @@
         }
       }
     },
-    "/api/v2/users/id": {
+    "/api/v1/users/:id": {
       "delete": {
         "tags": ["User"],
         "summary": "Delete User",
