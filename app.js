@@ -39,7 +39,7 @@ const allowedOrigins = [
   "http://l27.0.0.1:5000",
   "http://localhost:5500",
   "http://127.0.0.1:5500",
-  "https://capstone-final-tau.vercel.app/",
+  "https://capstone-final-tau.vercel.app",
 ];
 
 const corsOptions = {
